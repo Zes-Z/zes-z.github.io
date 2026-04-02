@@ -81,7 +81,7 @@ export const profileConfig: ProfileConfig = {
     {
        name: "Photos",
        icon: "fa6-solid:camera",
-       url: "https://www.alipan.com/s/yDjEWfa7yv8",
+       url: "https://www.alipan.com/s/rnJsLF2KTtt",  // 提取码: 1a1m
        // url: /images/wechat-qrcode.jpg
     },
 	],
