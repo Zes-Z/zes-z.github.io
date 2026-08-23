@@ -21,8 +21,19 @@ const groups = friends as FriendGroup[];
     {
       groups.map((group) => (
         <section class="links-group">
-          {group.name && <h2 class="links-group-title">{localize(group.name, lang)}</h2>}
-          {group.desc && <p class="links-group-desc">{localize(group.desc, lang)}</p>}
+          <div class="links-group-header">
+  {group.name && (
+    <h2 class="links-group-title">
+      {localize(group.name, lang)}
+    </h2>
+  )}
+
+  {group.desc && (
+    <p class="links-group-desc">
+      {localize(group.desc, lang)}
+    </p>
+  )}
+</div>
           <div class="links-grid">
             {
               group.items.map((friend) => (
@@ -58,32 +69,41 @@ const groups = friends as FriendGroup[];
     margin-bottom: 2rem;
   }
 
-  .links-group-title {
-    margin: 0 0 0.35rem;
-    font-size: 1.3rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-  .links-group-title::before {
-    content: '';
-    width: 5px;
-    height: 1.2rem;
-    border-radius: 999px;
-    background: linear-gradient(180deg, var(--accent), transparent);
-  }
+.links-group-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
 
-  .links-group-desc {
-    margin: 0 0 1rem;
-    color: var(--text-soft);
-    font-size: 0.92rem;
-  }
+.links-group-title::before {
+  content: '';
+  width: 5px;
+  height: 1.2rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+}
+
+.links-group-desc {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+  .links-group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
 
   .links-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 每行 2~3 列 */
-    gap: 14px;
+    gap: 36px;
+    width: 90%;
+    margin: 0 auto;
   }
 
   @media (max-width: 1000px) {
@@ -149,4 +169,6 @@ const groups = friends as FriendGroup[];
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+
 </style>

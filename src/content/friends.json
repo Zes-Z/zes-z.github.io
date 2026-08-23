@@ -18,11 +18,11 @@
           "jap": "cyou daii"
         },
         "desc": {
-          "eng": "Notes on programming and life.",
+          "eng": "It takes many.",
           "cn": "感谢他的协作。",
-          "jap": "プログラミングと生活のメモ。"
+          "jap": "三人寄れば文殊の知恵。"
         },
-        "avatar": "https://avatars.githubusercontent.com/u/57286919",
+        "avatar": "/cyou daii.jpg",
         "link": "https://davis-blog.vercel.app/"
       },
       {
@@ -32,11 +32,11 @@
           "jap": "kosame"
         },
         "desc": {
-          "eng": "Essays on the calm craft of writing.",
+          "eng": "It starts raining.",
           "cn": "感谢她的倾听。",
-          "jap": "静かな執筆についての随筆。"
+          "jap": "言うより聞く。"
         },
-        "avatar": "https://avatars.githubusercontent.com/u/9919",
+        "avatar": "/kosame.jpg",
         "link": "https://example.com"
       },
       {
@@ -46,11 +46,11 @@
           "jap": "cyou shiyu"
         },
         "desc": {
-          "eng": "A small harbour of everyday observations.",
+          "eng": "The same wavelength.",
           "cn": "感谢她的同理心。",
-          "jap": "日々の観察の小さな港。"
+          "jap": "情けは人のためならず。"
         },
-        "avatar": "https://avatars.githubusercontent.com/u/1",
+        "avatar": "/cyou shiyu.jpg",
         "link": "https://example.com"
       },
       {
@@ -64,7 +64,7 @@
           "cn": "感谢她的存在。",
           "jap": "静かな執筆についての随筆。"
         },
-        "avatar": "https://avatars.githubusercontent.com/u/9919",
+        "avatar": "",
         "link": "https://example.com"
       }
 

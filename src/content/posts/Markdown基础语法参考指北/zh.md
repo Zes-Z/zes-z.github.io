@@ -3,7 +3,7 @@ title: "Markdown基础语法参考指北"
 description: ""
 pubDate: "2026-03-04"
 category: "Math & Coding"
-tag: [markdown]
+tag: [markdown,introduction]
 
 postImage: "./落日余晖.jpg"
 homepined: true

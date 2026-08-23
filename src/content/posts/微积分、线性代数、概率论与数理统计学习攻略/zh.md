@@ -3,7 +3,7 @@ title: "微积分、线性代数、概率论与数理统计学习攻略"
 description: "转生工科必备数学三大件的学习路径选择及资源链接"
 pubDate: "2026-04-01"
 category: "Math & Coding"
-tag: []
+tag: [微积分,线性代数,概率统计]
 postImage: " "
 homepined: false
 pinedOrder: 0

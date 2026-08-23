@@ -243,19 +243,19 @@ async function newPost() {
    * Each language file gets the same three
    * heading placeholders.
    */
-  const body = `#
+  const body = `##
 
 
 
 ---
 
-#
+##
 
 
 
 ---
 
-#
+##
 
 
 

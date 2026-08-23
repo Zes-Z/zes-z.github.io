@@ -3,7 +3,7 @@ title: "Link to something"
 description: ""
 pubDate: "2026-04-11"
 category: "Source"
-tag: [source]
+tag: [links]
 
 postImage: "./海滨蓝天白云.jpg"
 homepined: true

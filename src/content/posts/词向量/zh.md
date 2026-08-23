@@ -3,12 +3,8 @@ title: "词向量"
 description: "一文简介词向量的发展历程,及它和大语言模型的关联"
 pubDate: "2026-03-24"
 category: "Omnium"
-# updatedDate: "2026-06-22"
-heroImage: ""
-homeFeatured: false   # 用于指定在首页 Read 区优先大图片展示
+tag: [词向量]
 
-# homeOrder:          # 用于指定首页下方 All Posts顺序
-# homeHeroOrder:      # 用于指定首页个签下方置顶文章顺序,在 srcpagesindex.astro 第27行增加置顶篇章数
 draft: false
 ---
 
