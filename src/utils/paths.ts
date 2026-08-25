@@ -33,10 +33,6 @@ export function archiveHref(lang: Language): string {
   return withBase(`/${lang}/archive`);
 }
 
-export function aboutHref(lang: Language): string {
-  return withBase(`/${lang}/about`);
-}
-
 export function linksHref(lang: Language): string {
   return withBase(`/${lang}/links`);
 }
@@ -46,7 +42,7 @@ export function rssHref(lang: Language): string {
 }
 
 /** Route segments that exist identically in every language. */
-const SHARED_SEGMENTS = new Set(['archive', 'about', 'links', 'photos']);
+const SHARED_SEGMENTS = new Set(['archive', 'links', 'photos']);
 
 /**
  * Translate a URL of the current language into the same page in another

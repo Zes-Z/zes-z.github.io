@@ -8,13 +8,23 @@ interface Props {
   /** Optional overlay content (site title / subtitle). */
   title?: string;
   subtitle?: string;
+  /** 将 title 渲染为指向该链接的文章链接(如"关于我"一文)。 */
+  titleHref?: string;
   /** Overlay placement. */
   position?: 'center' | 'bottom-left';
   /** Crossfade interval in ms. */
   interval?: number;
 }
 
-const { images, height = 'full', title, subtitle, position = 'center', interval = 6000 } = Astro.props;
+const {
+  images,
+  height = 'full',
+  title,
+  subtitle,
+  titleHref,
+  position = 'center',
+  interval = 6000,
+} = Astro.props;
 const hasOverlay = Boolean(title || subtitle);
 ---
 
@@ -35,7 +45,12 @@ const hasOverlay = Boolean(title || subtitle);
   <div class="hero-fade-bottom" aria-hidden="true"></div>
   {hasOverlay && (
     <div class:list={['hero-overlay', `hero-overlay--${position}`]}>
-      {title && <h1 class="hero-title">{title}</h1>}
+      {title &&
+        (titleHref ? (
+          <a class="hero-title hero-title-link" href={withBase(titleHref)}>{title}</a>
+        ) : (
+          <h1 class="hero-title">{title}</h1>
+        ))}
       {subtitle && <p class="hero-subtitle">{subtitle}</p>}
     </div>
   )}
@@ -140,9 +155,15 @@ const hasOverlay = Boolean(title || subtitle);
     text-align: left;
     padding: 0 5vw 4.5rem;
   }
-  .hero-overlay--bottom-left .hero-title {
-    font-size: clamp(1.4rem, 2.6vw, 2rem);
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  .hero-overlay--bottom-left .hero-title,
+  .hero-overlay--bottom-left .hero-title-link {
+    /* 斜体艺术字:稍小、字重稍轻,不要太夸张 */
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400;
+    font-style: italic;
+    font-family: var(--font-sans);
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
   }
   .hero-overlay--bottom-left .hero-subtitle {
     font-size: clamp(0.92rem, 1.4vw, 1.05rem);
@@ -155,6 +176,19 @@ const hasOverlay = Boolean(title || subtitle);
     font-size: clamp(2.2rem, 6vw, 4rem);
     font-weight: 800;
     letter-spacing: 0.02em;
+  }
+
+  /* 左下角"关于我"文章链接 */
+  .hero-title-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding-bottom: 1px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .hero-title-link:hover {
+    border-color: #fff;
+    color: #fff;
   }
 
 

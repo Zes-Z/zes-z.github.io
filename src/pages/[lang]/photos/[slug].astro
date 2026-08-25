@@ -35,7 +35,7 @@ const backHref = withBase(`/${lang}/photos`);
 
 <BaseLayout lang={lang} title={title} description={description || undefined}>
   <div class="portfolio-detail">
-    <a class="portfolio-back" href={backHref}>← {t(lang, 'nav.photos')}</a>
+    <a class="portfolio-back" href={backHref} data-back-to-photos>← {t(lang, 'nav.photos')}</a>
 
     <h1 class="portfolio-detail-title">{title}</h1>
     {description && <p class="portfolio-detail-desc">{description}</p>}
@@ -137,3 +137,18 @@ const backHref = withBase(`/${lang}/photos`);
     border-radius: var(--radius);
   }
 </style>
+
+<script>
+  // "← 相册"返回:优先回到点入前的页面(history),没有历史时回退到相册页
+  const backLink = document.querySelector<HTMLAnchorElement>('[data-back-to-photos]');
+  if (backLink) {
+    backLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = backLink.href;
+      }
+    });
+  }
+</script>

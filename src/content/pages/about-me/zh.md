@@ -1,10 +1,10 @@
 ---
-title: "关于我"
-description: ""
+title: "About me and this site"
 ---
+
 我是 **Zest** 的作者——一个喜欢安静工具、长距离散步和整齐笔记的开发者。
 
-本页默认渲染 `src/content/pages/about/zh.md`。下方是一个与本页共存的 **简历** 附属页面,点击箭头即可折叠或展开。
+---
 
 - 2016 年开始做 Web 开发
 - 用三种语言写作:中文 / English / 日本語

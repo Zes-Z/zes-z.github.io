@@ -5,9 +5,9 @@ import type { Language, LocalizedText } from './types';
  * Most site-level customization happens in this file.
  */
 export const siteConfig = {
-  /** Site name shown in the header, footer and <title>. */
+  /** Site name shown in the footer and <title>. */
   title: 'Zest',
-  herostr:'周旋久',
+  herostr:'About me and this site',
   /** Site subtitle (supports the three languages). */
   // subtitle: {
   //   eng: 'A fresh trilingual blog theme',
@@ -40,14 +40,14 @@ export const siteConfig = {
    *   href     : URL string, or a function of the current language
    *              (e.g. (lang) => `/${lang}/archive`)
    *   external : open in a new tab
+   *   icon     : 导航图标名(home | archive | recipe | photos | friends)
    */
   nav: [
-    { label: { eng: 'Home', cn: '首页', jap: 'ホーム' }, href: (lang: Language) => `/${lang}`, external: false },
-    { label: { eng: 'Archive', cn: '归档', jap: 'アーカイブ' }, href: (lang: Language) => `/${lang}/archive`, external: false },
-    { label: { eng: 'Recipe', cn: '菜单', jap: 'レシピ' }, href: 'https://zesrecipes.pages.dev/', external: true },
-    { label: { eng: 'Photos', cn: '相册', jap: '写真' }, href: (lang: Language) => `/${lang}/photos`, external: false },
-    { label: { eng: 'About', cn: '关于', jap: '概要' }, href: (lang: Language) => `/${lang}/about`, external: false },
-    { label: { eng: 'Friends', cn: '友链', jap: '友達リンク' }, href: (lang: Language) => `/${lang}/links`, external: false },
+    { label: { eng: 'Home', cn: '首页', jap: 'ホーム' }, href: (lang: Language) => `/${lang}`, external: false, icon: 'home' },
+    { label: { eng: 'Archive', cn: '归档', jap: 'アーカイブ' }, href: (lang: Language) => `/${lang}/archive`, external: false, icon: 'archive' },
+    { label: { eng: 'Recipe', cn: '菜单', jap: '料理' }, href: 'https://zesrecipes.pages.dev/', external: true, icon: 'recipe' },
+    { label: { eng: 'Photos', cn: '相册', jap: '写真' }, href: (lang: Language) => `/${lang}/photos`, external: false, icon: 'photos' },
+    { label: { eng: 'Friends', cn: '友链', jap: '友達リンク' }, href: (lang: Language) => `/${lang}/links`, external: false, icon: 'friends' },
   ] as const,
 
   /**
@@ -83,6 +83,7 @@ export const siteConfig = {
     '/images/海浪海鸥.jpg',
     '/images/码头木桥.jpg',
     '/images/碧海蓝天.jpg',
+    '/iamges/蟹老板 办公室.jpg'
 
   ],
   /** Hero images used on the friends page. */

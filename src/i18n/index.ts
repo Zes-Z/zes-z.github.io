@@ -7,7 +7,6 @@ const en = {
   'nav.archive': 'Archive',
   'nav.recipe': 'Recipe',
   'nav.photos': 'Photos',
-  'nav.about': 'About',
   'nav.links': 'Friends',
 
   'lang.name': 'English',
@@ -40,10 +39,6 @@ const en = {
   'photos.comingDesc': 'This section is still under construction — stay tuned.',
   'photos.empty': 'No photos yet.',
 
-  'about.resume': 'Resume',
-  'about.collapse': 'Collapse',
-  'about.expand': 'Expand',
-
   // 'links.title': 'Friends',
   // 'links.desc': 'Sites I read and recommend.',
 
@@ -63,9 +58,7 @@ const zh: Record<UiKey, string> = {
   'nav.archive': '归档',
   'nav.recipe': '菜单',
   'nav.photos': '相册',
-  'nav.about': '关于',
   'nav.links': '友链',
-
   'lang.name': '中文',
   'lang.switch': '语言',
 
@@ -96,10 +89,6 @@ const zh: Record<UiKey, string> = {
   'photos.comingDesc': '该板块正在建设中,敬请期待。',
   'photos.empty': '暂无照片。',
 
-  'about.resume': '简历',
-  'about.collapse': '折叠',
-  'about.expand': '展开',
-
   // 'links.title': '友链',
   // 'links.desc': '我常读与推荐的站点。',
 
@@ -115,9 +104,8 @@ const zh: Record<UiKey, string> = {
 const ja: Record<UiKey, string> = {
   'nav.home': 'ホーム',
   'nav.archive': 'アーカイブ',
-  'nav.recipe': 'レシピ',
+  'nav.recipe': '料理',
   'nav.photos': '写真',
-  'nav.about': '概要',
   'nav.links': '友達リンク',
 
   'lang.name': '日本語',
@@ -149,10 +137,6 @@ const ja: Record<UiKey, string> = {
   'photos.coming': '準備中',
   'photos.comingDesc': 'このセクションは準備中です。お楽しみに。',
   'photos.empty': '写真はまだありません。',
-
-  'about.resume': '履歴書',
-  'about.collapse': '折りたたむ',
-  'about.expand': '展開',
 
   // 'links.title': '友達リンク',
   // 'links.desc': 'よく読む・おすすめのサイト。',
