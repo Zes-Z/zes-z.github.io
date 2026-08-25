@@ -47,7 +47,7 @@ export const siteConfig = {
     { label: { eng: 'Archive', cn: '归档', jap: 'アーカイブ' }, href: (lang: Language) => `/${lang}/archive`, external: false, icon: 'archive' },
     { label: { eng: 'Recipe', cn: '菜单', jap: '料理' }, href: 'https://zesrecipes.pages.dev/', external: true, icon: 'recipe' },
     { label: { eng: 'Photos', cn: '相册', jap: '写真' }, href: (lang: Language) => `/${lang}/photos`, external: false, icon: 'photos' },
-    { label: { eng: 'Friends', cn: '友链', jap: '友達リンク' }, href: (lang: Language) => `/${lang}/links`, external: false, icon: 'friends' },
+    { label: { eng: 'Friends', cn: '友链', jap: '友達' }, href: (lang: Language) => `/${lang}/links`, external: false, icon: 'friends' },
   ] as const,
 
   /**
@@ -83,11 +83,17 @@ export const siteConfig = {
     '/images/海浪海鸥.jpg',
     '/images/码头木桥.jpg',
     '/images/碧海蓝天.jpg',
-    '/iamges/蟹老板办公室.jpg'
+    '/images/蟹老板办公室.jpg',
 
   ],
-  /** Hero images used on the friends page. */
-  linksHeroImages: ['/images/saber花间意.jpg', '/images/海浪海鸥.jpg'],
+  /** 友链页主图:images = 轮播图片,interval = 切换间隔(毫秒)。 */
+  linksHero: {
+    images: ['/images/线条小狗西瓜游泳池.jpg', '/images/海绵宝宝自拍合照.jpg'],
+    interval: 4000,
+  },
+
+  /** 主页轮播主图切换间隔(毫秒)。大约 3000 = 3 秒。 */
+  heroInterval: 3000,
 
   /** How many pinned posts the home page shows (1 large + the rest). */
   pinnedMax: 3,

@@ -15,7 +15,7 @@ const groups = friends as FriendGroup[];
 ---
 
 <BaseLayout lang={lang} title={t(lang, 'nav.links')} fullWidth>
-  <Hero images={[...siteConfig.linksHeroImages]} height="medium" />
+  <Hero images={[...siteConfig.linksHero.images]} height="medium" interval={siteConfig.linksHero.interval} />
 
   <div class="container-x links-content">
     {

@@ -88,8 +88,8 @@ const hasOverlay = Boolean(title || subtitle);
     min-height: 480px;
   }
   .hero--medium {
-    height: min(56vh, 480px);
-    min-height: 300px;
+    height: min(68vh, 520px);
+    min-height: 320px;
   }
 
   .hero-image {
@@ -153,16 +153,17 @@ const hasOverlay = Boolean(title || subtitle);
     align-items: flex-start;
     justify-content: flex-end;
     text-align: left;
-    padding: 0 5vw 4.5rem;
+    padding: 0 5vw 3.2rem;
   }
   .hero-overlay--bottom-left .hero-title,
   .hero-overlay--bottom-left .hero-title-link {
-    /* 斜体艺术字:稍小、字重稍轻,不要太夸张 */
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 400;
+    /* 斜体艺术字:圆润无衬线(Nunito),保持倾斜与可读性 */
+    font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+    font-weight: 600;
     font-style: italic;
-    font-family: var(--font-sans);
-    letter-spacing: 0.01em;
+    font-family: 'Nunito', 'Segoe UI', 'PingFang SC', 'Hiragino Sans', 'Noto Sans JP',
+      'Noto Sans SC', system-ui, sans-serif;
+    letter-spacing: 0.015em;
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
   }
   .hero-overlay--bottom-left .hero-subtitle {

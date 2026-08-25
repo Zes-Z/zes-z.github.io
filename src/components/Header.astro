@@ -13,9 +13,9 @@ interface Props {
 // 导航图标(线性、协调统一)
 const navIcons: Record<string, string> = {
   home: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.5 10.5 10 4l6.5 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V17h9V9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  archive: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.5" y="4" width="13" height="13" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 8h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-  recipe: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 3h6v5a3 3 0 0 1-6 0V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 11v6M5 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-  photos: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3.5" y="4.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="8.5" r="1.3"/><path d="M3.5 12.5 8 9l4 3 4-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  archive: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.8 4.6 9.6 7.9 8.2 10.6 1.4 7.3 Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4.2 5.9 8.9 8.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M8.9 8.4 9.6 7.9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="6.8" y="10.4" width="10.4" height="3.6" rx="0.8" stroke="currentColor" stroke-width="1.7"/><rect x="6.8" y="15" width="10.4" height="3.6" rx="0.8" stroke="currentColor" stroke-width="1.7"/><path d="M8.6 12.2h.01M8.6 16.8h.01" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+  recipe: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 3v6a1.5 1.5 0 0 0 3 0V3M7.5 9v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M13.5 3v14M13.5 3c1.8.4 2.5 2 2.5 4 0 1.8-.7 3.4-2.5 3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  photos: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2.5" y="3" width="15" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><circle cx="8" cy="7.3" r="1.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 14.3 8 9.6l3.3 2.9 3.7-2.6 2.5 2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   friends: '<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8.33 10.83a4.17 4.17 0 0 0 6.28.45l2.5-2.5a4.17 4.17 0 0 0-5.89-5.89l-1.43 1.43" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.67 9.17a4.17 4.17 0 0 0-6.28-.45l-2.5 2.5a4.17 4.17 0 0 0 5.89 5.89l1.43-1.43" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 
@@ -37,20 +37,6 @@ const items = siteConfig.nav.map((item) => {
 
 <header class="site-header" data-header>
   <div class="header-inner">
-    <!-- 搜索(灵动岛内左侧,仅图标) -->
-    <button
-      class="icon-btn"
-      type="button"
-      aria-label={t(lang, 'search.open')}
-      title={t(lang, 'search.open')}
-      data-search-open
-    >
-      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <circle cx="9" cy="9" r="5.6" stroke="currentColor" stroke-width="1.8"></circle>
-        <path d="m13.4 13.4 3.8 3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
-      </svg>
-    </button>
-
     <nav class="site-nav" id="site-nav" data-nav>
       <ul>
         {
@@ -71,6 +57,18 @@ const items = siteConfig.nav.map((item) => {
     </nav>
 
     <div class="header-actions">
+      <button
+        class="icon-btn"
+        type="button"
+        aria-label={t(lang, 'search.open')}
+        title={t(lang, 'search.open')}
+        data-search-open
+      >
+        <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="5.6" stroke="currentColor" stroke-width="1.8"></circle>
+          <path d="m13.4 13.4 3.8 3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+        </svg>
+      </button>
       <LanguagePicker lang={lang} pathname={pathname} />
       <ThemeToggle lang={lang} />
     </div>
@@ -138,18 +136,23 @@ const items = siteConfig.nav.map((item) => {
     margin: 0;
     z-index: 40;
     display: block;
+    /* 顶部状态:图标+文字全显示,略低的毛玻璃高度 */
+    height: 58px;
+    box-sizing: border-box;
     /* 初始无底色 */
     background: transparent;
     border: 1px solid transparent;
     border-radius: 999px;
     transition:
+      height 0.25s ease,
       background-color 0.2s,
       border-color 0.15s,
       box-shadow 0.2s;
   }
 
-  /* 滚动后:毛玻璃胶囊(带底色/边框/阴影) */
+  /* 滚动后:毛玻璃胶囊(带底色/边框/阴影),并缩小为图标为主 */
   .site-header.not-top {
+    height: 52px;
     background: color-mix(in srgb, var(--bg) 72%, transparent);
     border-color: var(--border);
     box-shadow:
@@ -169,8 +172,8 @@ const items = siteConfig.nav.map((item) => {
     align-items: center;
     justify-content: center;
     gap: 2px;
-    height: 52px;
-    padding: 0 8px;
+    height: 100%;
+    padding: 0 10px;
     white-space: nowrap;
   }
 
@@ -192,7 +195,7 @@ const items = siteConfig.nav.map((item) => {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 7px 11px;
+    padding: 10px 12px;
     border-radius: 999px;
     font-size: 0.88rem;
     font-weight: 600;
@@ -212,28 +215,44 @@ const items = siteConfig.nav.map((item) => {
   }
   .nav-label {
     display: inline-block;
-    max-width: 0;
-    opacity: 0;
+    max-width: 120px;
+    opacity: 1;
     overflow: hidden;
     white-space: nowrap;
-    margin-left: 0;
+    margin-left: 6px;
     transition:
       max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.25s ease 0.05s,
+      opacity 0.25s ease,
       margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  /* 仿 hin.cool 灵动岛:悬停胶囊时所有文字同时滑出 */
-  .site-header:hover .nav-label {
+  /* 滚动缩小后:只显示图标,文字收起;悬停胶囊时再次滑出 */
+  .site-header.not-top .nav-label {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+  }
+  .site-header.not-top:hover .nav-label {
     max-width: 120px;
     opacity: 1;
     margin-left: 6px;
   }
-  /* 当前页:文字常显 + 天蓝高亮 */
+  /* 当前页:天蓝高亮(顶部状态文字常显) */
   .nav-link.is-active {
     color: var(--sky);
     background: color-mix(in srgb, var(--sky) 15%, transparent);
   }
   .nav-link.is-active .nav-label {
+    max-width: 120px;
+    opacity: 1;
+    margin-left: 6px;
+  }
+  /* 滚动缩小后:即使当前页也收起文字,随悬停滑出 */
+  .site-header.not-top .nav-link.is-active .nav-label {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+  }
+  .site-header.not-top:hover .nav-link.is-active .nav-label {
     max-width: 120px;
     opacity: 1;
     margin-left: 6px;
@@ -255,8 +274,8 @@ const items = siteConfig.nav.map((item) => {
     border: 0;
     border-radius: 999px;
     color: var(--nav-text);
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     place-items: center;
     cursor: pointer;
     transition:

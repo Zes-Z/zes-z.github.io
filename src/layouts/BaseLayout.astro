@@ -57,6 +57,13 @@ const pageDescription = description ?? localize(siteConfig.description, lang);
     <meta name="description" content={pageDescription} />
     <link rel="icon" type="image/svg+xml" href={withBase(siteConfig.favicon)} />
     <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={withBase(`/${lang}/rss.xml`)} />
+    <!-- 圆润艺术字体(仅用于英雄区斜体标题),延迟加载不影响首屏 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,500;1,600&display=swap"
+    />
     <meta name="theme-color" content="#eef6ef" />
     <title>{pageTitle}</title>
   </head>
