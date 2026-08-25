@@ -83,7 +83,7 @@ export const siteConfig = {
     '/images/海浪海鸥.jpg',
     '/images/码头木桥.jpg',
     '/images/碧海蓝天.jpg',
-    '/iamges/蟹老板 办公室.jpg'
+    '/iamges/蟹老板办公室.jpg'
 
   ],
   /** Hero images used on the friends page. */
