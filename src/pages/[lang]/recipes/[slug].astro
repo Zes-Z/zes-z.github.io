@@ -1,0 +1,154 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../../site.config';
+import { t } from '../../../i18n';
+import type { Language } from '../../../types';
+import { recipeImages } from '../../../utils/recipes';
+import { withBase } from '../../../utils/paths';
+import { renderMarkdown } from '../../../utils/markdown';
+
+export async function getStaticPaths() {
+  const paths: { params: { lang: string; slug: string } }[] = [];
+  for (const lang of siteConfig.langs) {
+    const items = await getCollection('recipes', (r) => r.id.startsWith(`${lang}/`));
+    for (const item of items) {
+      paths.push({ params: { lang, slug: item.id.slice(lang.length + 1) } });
+    }
+  }
+  return paths;
+}
+
+const { lang, slug } = Astro.params as { lang: Language; slug: string };
+const recipe = (await getCollection('recipes')).find((r) => r.id === `${lang}/${slug}`);
+
+if (!recipe) {
+  return Astro.redirect(`/${lang}/recipes`);
+}
+
+const title = recipe.data.title;
+const description = recipe.data.description ?? '';
+const { html: bodyHtml } = await renderMarkdown(recipe.body ?? '');
+const images = await recipeImages(slug);
+const backHref = withBase(`/${lang}/recipes`);
+---
+
+<BaseLayout lang={lang} title={title} description={description || undefined}>
+  <div class="recipe-detail">
+    <a class="recipe-back" href={backHref} data-back-to-recipes>← {t(lang, 'nav.recipe')}</a>
+
+    <h1 class="recipe-detail-title">{title}</h1>
+    {description && <p class="recipe-detail-desc">{description}</p>}
+
+    {bodyHtml && <div class="prose recipe-detail-body" set:html={bodyHtml} />}
+
+    {
+      images.length > 0 ? (
+        <div class="recipe-detail-masonry">
+          {
+            images.map((p) => (
+              <img
+                class:list={['recipe-photo', { 'is-landscape': p.landscape }]}
+                src={p.src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            ))
+          }
+        </div>
+      ) : (
+        <p class="recipes-empty">{t(lang, 'photos.empty')}</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .recipe-detail {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.5rem 0 2rem;
+  }
+
+  .recipe-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+  }
+  .recipe-back:hover {
+    color: var(--hover);
+  }
+
+  .recipe-detail-title {
+    margin: 0 0 0.6rem;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 800;
+  }
+
+  .recipe-detail-desc {
+    margin: 0 0 0.6rem;
+    color: var(--text-soft);
+    font-size: 1rem;
+  }
+
+  .recipe-detail-body {
+    margin: 0.6rem 0 1.6rem;
+  }
+
+  .recipe-detail-masonry {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: dense;
+    gap: 14px;
+    align-items: start;
+  }
+  .recipe-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+  }
+  .recipe-photo.is-landscape {
+    grid-column: span 2;
+  }
+  @media (max-width: 900px) {
+    .recipe-detail-masonry {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    .recipe-detail-masonry {
+      grid-template-columns: 1fr;
+    }
+    .recipe-photo.is-landscape {
+      grid-column: span 1;
+    }
+  }
+
+  .recipes-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-faint);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+  }
+</style>
+
+<script>
+  // "← 菜单"返回:优先回到点入前的页面(history),没有历史时回退到菜单页
+  const backLink = document.querySelector<HTMLAnchorElement>('[data-back-to-recipes]');
+  if (backLink) {
+    backLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = backLink.href;
+      }
+    });
+  }
+</script>

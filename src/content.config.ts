@@ -54,4 +54,24 @@ export const collections = {
       pubDate: z.coerce.date().optional(),
     }),
   }),
+
+  /**
+   * Recipes: one folder per recipe — `src/content/recipes/<slug>/{zh,en,ja}.md`
+   * (title + category + description + tags + recipe body) plus the recipe's images.
+   * `tag`/`tags` 保留但暂不展示;`homepined`/`pinedOrder` 暂未使用。
+   */
+  recipes: defineCollection({
+    loader: zestLoader({ base: './src/content/recipes' }),
+    schema: z.object({
+      title: z.string(),
+      categories: z.string().nullable().optional(),
+      description: z.string().optional(),
+      pubDate: z.coerce.date().optional(),
+      tags: z.array(z.string()).default([]),
+      postImage: z.string().nullable().optional(),
+      homepined: z.boolean().default(false),
+      pinedOrder: z.number().default(0),
+      draft: z.boolean().default(false),
+    }),
+  }),
 };

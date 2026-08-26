@@ -45,7 +45,7 @@ export const siteConfig = {
   nav: [
     { label: { eng: 'Home', cn: '首页', jap: 'ホーム' }, href: (lang: Language) => `/${lang}`, external: false, icon: 'home' },
     { label: { eng: 'Archive', cn: '归档', jap: 'アーカイブ' }, href: (lang: Language) => `/${lang}/archive`, external: false, icon: 'archive' },
-    { label: { eng: 'Recipe', cn: '菜单', jap: '料理' }, href: 'https://zesrecipes.pages.dev/', external: true, icon: 'recipe' },
+    { label: { eng: 'Recipe', cn: '菜单', jap: '料理' }, href: (lang: Language) => `/${lang}/recipes`, external: false, icon: 'recipe' },
     { label: { eng: 'Photos', cn: '相册', jap: '写真' }, href: (lang: Language) => `/${lang}/photos`, external: false, icon: 'photos' },
     { label: { eng: 'Friends', cn: '友链', jap: '友達' }, href: (lang: Language) => `/${lang}/links`, external: false, icon: 'friends' },
   ] as const,
@@ -113,8 +113,8 @@ export const siteConfig = {
   /** Welcome article rendered as the last home block (content/pages). */
   welcomePage: 'welcome',
 
-  /** Ratio cycle used by the archive masonry cards. */
-  masonryRatios: ['2 / 3', '3 / 2', '1 / 1'] as const,
+  /** Ratio cycle used by the archive masonry cards (3 列时对应实际显示 4/6·9/6·6/6,可密铺)。 */
+  masonryRatios: ['3 / 2', '2 / 3', '1 / 1'] as const,
 
   /**
    * 相册"所有"板块的图片:true = 默认淡黑白、悬停变彩色;
@@ -131,3 +131,45 @@ export const siteConfig = {
 export function siteSubtitle(): LocalizedText | undefined {
   return (siteConfig as { subtitle?: LocalizedText }).subtitle;
 }
+
+
+
+// ============================================================
+//   外观/布局参数速查表(调整文件 + 位置)
+// ============================================================
+ 
+//   以下各项的样式/逻辑不在本文件,而是分散在各 .astro / .ts 中。
+//   需要调整时,直接到对应文件改对应选择器即可。
+ 
+//   1) 顶部导航栏
+//      文件:src/components/Header.astro
+//      - 胶囊尺寸/毛玻璃/悬停展开:`.site-header`、`.header-inner`、`.nav-label`
+ 
+//   2) 瀑布流(归档/菜单/相册统一)
+//      - 比例集(CSS 宽:高 3/2·2/3·1/1):src/utils/ratio.ts 的 MASONRY_RATIOS
+//        以及 site.config.ts 上方 `masonryRatios`
+//      - 布局算法(列数/列宽/gap=列宽/6):src/scripts/masonry.ts 的 initMasonry
+//      - 图片块元素(应用 aspect-ratio):
+//         归档   → src/components/ArchivePanel.astro(.masonry-media)
+//         菜单   → src/pages/[lang]/recipes.astro(.recipe-media)
+//         相册   → src/pages/[lang]/photos.astro(.photo-item / .portfolio-cover)
+
+//   3) 友链页
+//      文件:src/pages/[lang]/links.astro
+//      - 标题与卡片块间距:`.links-group-header` 的 margin-bottom
+//      - 卡片墙宽度/列数/间距:`.links-grid`(grid-template-columns / max-width / gap)
+//      - 卡片高度:`.friend-avatar`(width/height)、`.friend-card`(padding)
+ 
+//   4) 底部导航栏
+//      文件:src/components/Footer.astro
+//      - 高度/间距/顶部渐变细线:`.site-footer`、`.footer-inner`
+ 
+//   5) 全站配色/主题变量
+//      文件:src/styles/global.css 的 html[data-theme='light'] / html[data-theme='dark']
+//      - --bg / --text / --sky / --surface / --border / --hover 等
+ 
+//   6) 文章页
+//      文件:src/pages/[lang]/posts/[slug].astro
+//      - 文章标题字号:`.post-title` 的 font-size
+//      - 代码块:src/utils/markdown.ts(rehypeCodeBlocks)、global.css 的 .code-block
+// ============================================================ */

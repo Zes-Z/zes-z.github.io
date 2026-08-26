@@ -83,6 +83,8 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
 </div>
 
 <script>
+  import { initMasonry } from '../scripts/masonry';
+
   interface ArchiveItem {
     id: string;
     href: string;
@@ -108,6 +110,7 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
   const timeline = panel.querySelector<HTMLElement>('[data-timeline]');
   const masonry = panel.querySelector<HTMLElement>('[data-masonry]');
   const masonryEmpty = panel.querySelector<HTMLElement>('[data-masonry-empty]');
+  const relayout = masonry ? initMasonry(masonry) : () => {};
 
   const state = { category: '' };
 
@@ -141,6 +144,7 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
       const card = document.createElement('a');
       card.className = 'masonry-card';
       card.href = post.href;
+      card.dataset.ratio = post.ratio;
       card.innerHTML = `
         <span class="masonry-media" style="aspect-ratio: ${post.ratio}">
           ${
@@ -166,6 +170,7 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
       `;
       masonry!.appendChild(card);
     });
+    relayout();
   }
 
   function escapeHtml(value: string): string {
@@ -364,19 +369,14 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
   /* ---------- masonry ----------
      卡片是客户端 JS 动态创建的,不会带 Astro 作用域属性,
      因此这些规则必须写成 :global 才能生效。
-     用 Grid(按行从左到右填充):4 个块 → 第一行 3 个、第二行第 4 个,
-     不再像 CSS 多列那样按列填成"两行两列"。 */
+     位置由 initMasonry 计算(最短列绝对定位),实现上下密铺。 */
   .masonry {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    align-items: start;
+    position: relative;
   }
 
   :global(.masonry-card) {
     position: relative;
     display: block;
-    width: 100%;
     margin: 0;
     border-radius: var(--radius);
     overflow: hidden;
@@ -421,8 +421,8 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
     position: absolute;
     inset: 0;
     z-index: 1;
-    /* 比上一次略强一点:从约一半处开始变暗,保证底部日期/标题文字清晰可读 */
-    background: linear-gradient(180deg, transparent 52%, rgba(10, 12, 16, 0.6));
+    /* 阴影只落到左下角日期/标题之间:更靠下、更淡 */
+    background: linear-gradient(180deg, transparent 72%, rgba(10, 12, 16, 0.32));
   }
 
   :global(.masonry-caption) {
@@ -471,18 +471,6 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
     background: var(--surface);
     border: 1px dashed var(--border-strong);
     border-radius: var(--radius);
-  }
-
-  /* 每行 1–3 个文章块:与容器宽度联动 */
-  @media (max-width: 1100px) {
-    .masonry {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (max-width: 640px) {
-    .masonry {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 900px) {

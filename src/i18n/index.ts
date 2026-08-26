@@ -4,6 +4,7 @@ import { siteConfig } from '../site.config';
 /** UI string dictionary for English (the key source of truth). */
 const en = {
   'nav.archive': 'Archive',
+  'nav.recipe': 'Recipe',
   'nav.photos': 'Photos',
   'nav.links': 'Friends',
 
@@ -45,6 +46,7 @@ export type UiKey = keyof typeof en;
 /** UI string dictionary for Chinese. */
 const zh: Record<UiKey, string> = {
   'nav.archive': '归档',
+  'nav.recipe': '菜单',
   'nav.photos': '相册',
   'nav.links': '友链',
   'lang.name': '中文',
@@ -83,6 +85,7 @@ const zh: Record<UiKey, string> = {
 /** UI string dictionary for Japanese. */
 const ja: Record<UiKey, string> = {
   'nav.archive': 'アーカイブ',
+  'nav.recipe': '料理',
   'nav.photos': '写真',
   'nav.links': '友達リンク',
 

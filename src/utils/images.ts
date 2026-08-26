@@ -65,8 +65,8 @@ export async function resolvePostImage(
 
 /**
  * Pick the archive masonry card ratio from the ORIGINAL image aspect ratio,
- * mapping it to the nearest of the allowed ratios (e.g. 2/3, 3/2, 1/1).
- * A 6k×4k image (3:2) becomes `3 / 2`; remote/absolute refs fall back.
+ * mapping it to the nearest of the allowed ratios (e.g. 3/2, 2/3, 1/1).
+ * A 3:2 image becomes `3 / 2`; remote/absolute refs fall back.
  */
 export async function postImageRatio(
   slug: string,

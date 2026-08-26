@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import { nearestRatio } from './ratio';
 
 /**
  * Photo helpers for the photos page.
@@ -22,6 +23,8 @@ export interface Photo {
   src: string;
   /** 横屏图片(width > height),用于在瀑布流中放大两倍与竖屏协调 */
   landscape: boolean;
+  /** 实际显示比例(CSS 宽:高):3 / 2 · 2 / 3 · 1 / 1 */
+  ratio: string;
 }
 
 const cache = new Map<string, Promise<Photo | undefined>>();
@@ -32,7 +35,13 @@ async function resolvePhoto(path: string, loader: () => Promise<unknown>) {
     promise = loader()
       .then((mod) => {
         const meta = (mod as { default: ImageMetadata }).default;
-        return { src: meta.src, landscape: (meta.width ?? 0) > (meta.height ?? 0) } as Photo;
+        const w = meta.width ?? 0;
+        const h = meta.height ?? 0;
+        return {
+          src: meta.src,
+          landscape: w > h,
+          ratio: w && h ? nearestRatio(w, h) : '6 / 6',
+        } as Photo;
       })
       .catch(() => undefined);
     cache.set(path, promise);
@@ -75,7 +84,10 @@ function basename(path: string): string {
 }
 
 /** Cover (first photo) of a portfolio, for the portfolio card grid. */
-export async function portfolioCover(slug: string): Promise<string | undefined> {
+export async function portfolioCover(
+  slug: string
+): Promise<{ src: string; ratio: string } | undefined> {
   const photos = await portfolioPhotos(slug);
-  return photos[0]?.src;
+  const first = photos[0];
+  return first ? { src: first.src, ratio: first.ratio } : undefined;
 }

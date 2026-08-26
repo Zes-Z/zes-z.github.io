@@ -62,7 +62,9 @@ const tabs = [
             {
               wall.map((p) => (
                 <img
-                  class:list={['photo-item', { 'is-landscape': p.landscape }]}
+                  class="photo-item"
+                  style={`aspect-ratio: ${p.ratio}`}
+                  data-ratio={p.ratio}
                   src={p.src}
                   alt=""
                   loading="lazy"
@@ -84,8 +86,21 @@ const tabs = [
           <div class="portfolio-masonry">
             {
               portfolios.map((p) => (
-                <a class="portfolio-card" href={p.href}>
-                  {p.cover && <img class="portfolio-cover" src={p.cover} alt={p.title} loading="lazy" decoding="async" />}
+                <a
+                  class="portfolio-card"
+                  href={p.href}
+                  data-ratio={p.cover?.ratio ?? '6 / 6'}
+                >
+                  {p.cover && (
+                    <img
+                      class="portfolio-cover"
+                      style={`aspect-ratio: ${p.cover.ratio}`}
+                      src={p.cover.src}
+                      alt={p.title}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                   <span class="portfolio-veil"></span>
                   <span class="portfolio-body">
                     <span class="portfolio-title">{p.title}</span>
@@ -115,6 +130,8 @@ const tabs = [
 </BaseLayout>
 
 <script>
+  import { initMasonry } from '../../scripts/masonry';
+
   // 类别切换:点击标签切换对应板块。
   // 通过导航类型区分"返回"与"刷新":
   //   - 从作品集详情页返回(back_forward)→ 恢复进入前的板块
@@ -123,6 +140,14 @@ const tabs = [
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-photos-tab]')];
   const views = [...document.querySelectorAll<HTMLElement>('[data-photos-view]')];
 
+  // 各板块瀑布流(隐藏时宽度为 0,切换显示后再重新布局)
+  const wallView = views.find((v) => v.dataset.photosView === 'wall');
+  const portView = views.find((v) => v.dataset.photosView === 'portfolio');
+  const relayoutWall = wallView?.querySelector<HTMLElement>('.photo-masonry');
+  const relayoutPort = portView?.querySelector<HTMLElement>('.portfolio-masonry');
+  const layoutWall = relayoutWall ? initMasonry(relayoutWall) : () => {};
+  const layoutPort = relayoutPort ? initMasonry(relayoutPort) : () => {};
+
   const activate = (id: string) => {
     tabs.forEach((b) => {
       const active = b.dataset.photosTab === id;
@@ -130,8 +155,12 @@ const tabs = [
       b.setAttribute('aria-selected', String(active));
     });
     views.forEach((view) => {
-      view.classList.toggle('is-active', view.dataset.photosView === id);
+      const active = view.dataset.photosView === id;
+      view.classList.toggle('is-active', active);
     });
+    // 显示后再布局对应瀑布流
+    if (id === 'wall') layoutWall();
+    else if (id === 'portfolio') layoutPort();
   };
 
   const navEntry = performance.getEntriesByType?.('navigation')[0] as
@@ -207,57 +236,28 @@ const tabs = [
     display: block;
   }
 
-  /* 瀑布流展示墙:CSS 多列(与归档瀑布流一致),逐列紧密填充、密集不稀疏;
-     每张照片保持自身宽高比(不强制统一比例) */
+  /* 瀑布流展示墙:位置由 initMasonry 计算(最短列绝对定位,上下密铺),
+     每张图按 4/6·9/6·6/6 显示(比例内联给定) */
   .photo-masonry {
-    columns: 3;
-    column-gap: 20px;
+    position: relative;
   }
   .photo-item {
     display: block;
     width: 100%;
     height: auto;
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    margin-bottom: 20px;
     border-radius: var(--radius);
+    object-fit: cover;
     background: var(--surface-2);
   }
-  @media (max-width: 1100px) {
-    .photo-masonry {
-      columns: 2;
-    }
-  }
-  @media (max-width: 640px) {
-    .photo-masonry {
-      columns: 1;
-    }
-  }
 
-  /* 作品集瀑布流(与"分类"同宽、同间距) */
+  /* 作品集瀑布流(与"分类"同款密铺 masonry) */
   .portfolio-masonry {
-    columns: 3;
-    column-gap: 20px;
-  }
-  @media (max-width: 1100px) {
-    .portfolio-masonry {
-      columns: 2;
-    }
-  }
-  @media (max-width: 640px) {
-    .portfolio-masonry {
-      columns: 1;
-    }
+    position: relative;
   }
 
   .portfolio-card {
     position: relative;
     display: block;
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    margin-bottom: 20px;
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid var(--border);
@@ -269,6 +269,7 @@ const tabs = [
     display: block;
     width: 100%;
     height: auto;
+    object-fit: cover;
   }
 
   .portfolio-veil {

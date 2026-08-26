@@ -4,6 +4,7 @@
  * Usage:
  *   pnpm newpost "文章名"
  *   pnpm newport "项目名"
+ *   pnpm newreci "菜名"
  *
  * Creates:
  *
@@ -15,6 +16,12 @@
  *
  *   newport:
  *   src/content/portfolios/<项目名>/
+ *     zh.md
+ *     en.md
+ *     ja.md
+ *
+ *   newreci:
+ *   src/content/recipes/<菜名>/
  *     zh.md
  *     en.md
  *     ja.md
@@ -48,18 +55,28 @@ function today(): string {
   )}-${pad(now.getDate())}`;
 }
 
+const onCancel = () => {
+  console.log('Cancelled.');
+  process.exit(0);
+};
+
 /* =========================================================
  * Command
  * ======================================================= */
 
 const command = process.argv[2];
 
-if (command !== 'newpost' && command !== 'newport') {
+if (
+  command !== 'newpost' &&
+  command !== 'newport' &&
+  command !== 'newreci'
+) {
   console.error(
     [
       'Usage:',
       '  pnpm newpost "文章名"',
       '  pnpm newport "项目名"',
+      '  pnpm newreci "菜名"',
     ].join('\n')
   );
 
@@ -69,8 +86,15 @@ if (command !== 'newpost' && command !== 'newport') {
 const name = process.argv.slice(3).join(' ').trim();
 
 if (!name) {
+  const label =
+    command === 'newpost'
+      ? '文章名'
+      : command === 'newport'
+        ? '项目名'
+        : '菜名';
+
   console.error(
-    `Usage: pnpm ${command} "${command === 'newpost' ? '文章名' : '项目名'}"`
+    `Usage: pnpm ${command} "${label}"`
   );
 
   process.exit(1);
@@ -182,12 +206,7 @@ async function newPost() {
         inactive: 'no',
       },
     ],
-    {
-      onCancel: () => {
-        console.log('Cancelled.');
-        process.exit(0);
-      },
-    }
+    { onCancel }
   ) as {
     titleEn: string;
     titleJa: string;
@@ -388,12 +407,7 @@ async function newPort() {
         initial: '',
       },
     ],
-    {
-      onCancel: () => {
-        console.log('Cancelled.');
-        process.exit(0);
-      },
-    }
+    { onCancel }
   ) as {
     titleEn: string;
     titleJa: string;
@@ -458,6 +472,147 @@ description: ${JSON.stringify(file.description)}
 }
 
 /* =========================================================
+ * newreci
+ * ======================================================= */
+
+/** 固定分类(与菜单页分类块一致)。 */
+const RECIPE_CATEGORIES = [
+  '蔬菜',
+  '禽类',
+  '海鲜',
+  '猪牛羊',
+  '汤',
+  '黑暗料理',
+];
+
+async function newRecipe() {
+  const recipesDir = join(
+    root,
+    'src',
+    'content',
+    'recipes'
+  );
+
+  const folder = join(
+    recipesDir,
+    name
+  );
+
+  if (existsSync(folder)) {
+    console.error(
+      `Folder already exists: ${folder}`
+    );
+
+    process.exit(1);
+  }
+
+  const response = await prompts(
+    [
+      {
+        type: 'select',
+        name: 'category',
+        message: '分类',
+        choices: RECIPE_CATEGORIES.map((c) => ({
+          title: c,
+          value: c,
+        })),
+        initial: 0,
+      },
+
+      {
+        type: 'text',
+        name: 'tags',
+        message: '标签(逗号分隔,可跳过)',
+        initial: '',
+      },
+
+      {
+        type: 'text',
+        name: 'description',
+        message: '描述(可跳过)',
+        initial: '',
+      },
+    ],
+    { onCancel }
+  ) as {
+    category: string;
+    tags: string;
+    description: string;
+  };
+
+  const tags = response.tags
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+
+  const frontmatter = [
+    `title: ${JSON.stringify(name)}`,
+    `categories: ${JSON.stringify(response.category)}`,
+    `description: ${JSON.stringify(response.description.trim())}`,
+    `pubDate: "${today()}"`,
+    `tags: [${tags
+      .map((tag) => JSON.stringify(tag))
+      .join(', ')}]`,
+    'postImage: ',
+    'homepined: true',
+    'pinedOrder: 0',
+    'draft: false',
+  ].join('\n');
+
+  const body = `## 备菜
+
+---
+
+## 
+
+
+
+---
+
+## 
+
+`;
+
+  const files = {
+    'zh.md': name,
+    'en.md': name,
+    'ja.md': name,
+  };
+
+  mkdirSync(folder, {
+    recursive: true,
+  });
+
+  for (const [fileName, title] of Object.entries(
+    files
+  )) {
+    writeFileSync(
+      join(folder, fileName),
+
+      `---\n${frontmatter}\n---\n\n${body}`,
+
+      'utf8'
+    );
+
+    console.log(
+      `wrote ${join(
+        'src/content/recipes',
+        name,
+        fileName
+      )}`
+    );
+  }
+
+  console.log('');
+  console.log(
+    `Created recipe folder: src/content/recipes/${name}/`
+  );
+  console.log(
+    'Put images (cover main.* + step photos) in the same folder.'
+  );
+}
+
+/* =========================================================
  * Run
  * ======================================================= */
 
@@ -467,4 +622,8 @@ if (command === 'newpost') {
 
 if (command === 'newport') {
   await newPort();
+}
+
+if (command === 'newreci') {
+  await newRecipe();
 }

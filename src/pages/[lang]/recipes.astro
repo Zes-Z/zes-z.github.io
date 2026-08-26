@@ -1,0 +1,262 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../site.config';
+import { t } from '../../i18n';
+import type { Language } from '../../types';
+import { recipeCover } from '../../utils/recipes';
+import { withBase } from '../../utils/paths';
+
+export async function getStaticPaths() {
+  return siteConfig.langs.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Language };
+
+/** 固定分类(与归档瀑布流一致,选中一个分类展示该类菜谱)。 */
+const RECIPE_CATEGORIES = ['蔬菜', '禽类', '海鲜', '猪牛羊', '汤', '黑暗料理'];
+
+const recipes = await Promise.all(
+  (await getCollection('recipes', (r) => r.id.startsWith(`${lang}/`)))
+    .filter((r) => !r.data.draft)
+    .map(async (r) => {
+      const slug = r.id.slice(lang.length + 1);
+      return {
+        id: r.id,
+        href: withBase(`/${lang}/recipes/${slug}`),
+        title: r.data.title,
+        description: r.data.description ?? '',
+        categories: r.data.categories ?? '',
+        cover: await recipeCover(slug),
+      };
+    })
+);
+
+const allCount = recipes.length;
+const categoryCounts = new Map<string, number>();
+for (const r of recipes) {
+  if (r.categories) categoryCounts.set(r.categories, (categoryCounts.get(r.categories) ?? 0) + 1);
+}
+---
+
+<BaseLayout lang={lang} title={t(lang, 'nav.recipe')}>
+  <div class="recipes-page" data-recipes-page>
+    <div class="recipes-categories" role="group" aria-label={t(lang, 'archive.categories')}>
+      <button class="category-pill is-active" type="button" data-category="" aria-pressed="true">
+        <span>{t(lang, 'archive.all')}</span>
+        <span class="filter-count">{allCount}</span>
+      </button>
+      {
+        RECIPE_CATEGORIES.map((cat) => (
+          <button class="category-pill" type="button" data-category={cat} aria-pressed="false">
+            <span>{cat}</span>
+            <span class="filter-count">{categoryCounts.get(cat) ?? 0}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    {
+      recipes.length > 0 ? (
+        <div class="recipes-masonry" data-recipes-masonry>
+          {
+            recipes.map((r) => (
+              <a
+                class="recipe-card"
+                href={r.href}
+                data-categories={r.categories}
+                data-ratio={r.cover?.ratio ?? '6 / 6'}
+              >
+                <span class="recipe-media" style={`aspect-ratio: ${r.cover?.ratio ?? '6 / 6'}`}>
+                  {r.cover ? (
+                    <img class="recipe-cover" src={r.cover.src} alt={r.title} loading="lazy" decoding="async" />
+                  ) : (
+                    <span class="recipe-fallback"></span>
+                  )}
+                </span>
+                <span class="recipe-veil"></span>
+                <span class="recipe-body">
+                  <span class="recipe-title">{r.title}</span>
+                  {r.description && <span class="recipe-desc">{r.description}</span>}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      ) : (
+        <p class="recipes-empty">{t(lang, 'photos.empty')}</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  import { initMasonry } from '../../scripts/masonry';
+
+  const page = document.querySelector<HTMLElement>('[data-recipes-page]');
+  if (page && page.dataset.ready !== 'true') {
+    page.dataset.ready = 'true';
+    const masonryEl = page.querySelector<HTMLElement>('[data-recipes-masonry]');
+    const pills = [...page.querySelectorAll<HTMLButtonElement>('[data-category]')];
+    const cards = [...page.querySelectorAll<HTMLElement>('[data-recipes-masonry] .recipe-card')];
+    const relayout = masonryEl ? initMasonry(masonryEl) : () => {};
+
+    const apply = (cat: string) => {
+      pills.forEach((b) => {
+        const active = b.dataset.category === cat;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+      cards.forEach((card) => {
+        card.hidden = cat !== '' && card.dataset.categories !== cat;
+      });
+      relayout();
+    };
+
+    pills.forEach((b) => {
+      b.addEventListener('click', () => apply(b.dataset.category ?? ''));
+    });
+    apply('');
+  }
+</script>
+
+<style>
+  .recipes-page {
+    max-width: 980px;
+    margin: 1.5rem auto 0;
+    padding-bottom: 2rem;
+  }
+
+  /* 分类胶囊(居中,仿归档) */
+  .recipes-categories {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.4rem;
+  }
+
+  .category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+  .category-pill:hover {
+    border-color: var(--hover);
+    color: var(--hover);
+    background: var(--surface-2);
+  }
+  .category-pill.is-active {
+    background: color-mix(in srgb, var(--sky) 14%, transparent);
+    border-color: var(--sky);
+    color: var(--sky);
+    font-weight: 600;
+  }
+  .category-pill .filter-count {
+    background: transparent;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+    line-height: 1;
+  }
+  .category-pill.is-active .filter-count {
+    color: var(--sky);
+  }
+
+  /* 瀑布流:位置由 initMasonry 计算(最短列绝对定位,上下密铺) */
+  .recipes-masonry {
+    position: relative;
+  }
+  .recipe-card[hidden] {
+    display: none !important;
+  }
+
+  .recipe-card {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    background: var(--surface-2);
+  }
+
+  /* 无论有无封面图都占固定比例,避免无图卡片塌成 0 高(比例由内联样式给定) */
+  .recipe-media {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+
+  .recipe-cover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .recipe-fallback {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 20%, var(--accent-soft), transparent 45%),
+      linear-gradient(135deg, var(--surface-2), var(--surface));
+  }
+
+  .recipe-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    /* 阴影只落到左下角标题之间:更靠下、更淡(与归档一致) */
+    background: linear-gradient(180deg, transparent 72%, rgba(10, 12, 16, 0.32));
+  }
+
+  .recipe-body {
+    position: absolute;
+    z-index: 2;
+    inset: auto 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .recipe-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  .recipe-desc {
+    font-size: 0.8rem;
+    opacity: 0.88;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .recipes-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-faint);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+  }
+</style>

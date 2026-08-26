@@ -95,13 +95,15 @@ const groups = friends as FriendGroup[];
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
   .links-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 与 TRpuppy 一致:桌面 3 列 */
-    gap: 16px; /* 紧凑间距,更像卡片墙 */
+    grid-template-columns: repeat(3, 1fr); /* 桌面 3 列 */
+    /* 收窄每个朋友块宽度 + 增大左右/上下间距 */
+    gap: 32px;
+    max-width: 960px;
     width: 100%;
     margin: 0 auto;
   }

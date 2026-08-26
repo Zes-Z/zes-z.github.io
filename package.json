@@ -14,6 +14,7 @@
   "check": "astro check",
   "newpost": "tsx cli/newpost.ts newpost",
   "newport": "tsx cli/newpost.ts newport",
+  "newreci": "tsx cli/newpost.ts newreci",
   "format": "prettier --write ."
 },
   "dependencies": {
