@@ -34,6 +34,7 @@ const posts = await Promise.all(
       day: date.getDate(),
       image: await resolvePostImage(slugOf(post, lang), post.data.postImage, 600),
       // 比例取自原图真实宽高比,映射到最近的 2/3、3/2、1/1
+      // (这是"卡片自身比例";分类之间靠同一套 3 列瀑布流保持一致,而不是把每块都压成 1/1)
       ratio: await postImageRatio(slugOf(post, lang), post.data.postImage, siteConfig.masonryRatios),
     };
   })

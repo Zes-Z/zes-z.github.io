@@ -71,6 +71,13 @@ export const siteConfig = {
       label: { eng: 'Email', cn: '邮箱', jap: 'メール' },
     },
     {
+      icon: 'cloud',
+      // 云盘链接:换成你自己的网盘地址(如夸克/百度/蓝奏/OD 等)
+      href: 'https://pan.quark.cn/',
+      label: { eng: 'Cloud Drive', cn: '云盘', jap: 'クラウドドライブ' },
+    },
+
+    {
       icon: 'rss',
       href: (lang: Language) => `/${lang}/rss.xml`,
       label: { eng: 'RSS', cn: 'RSS', jap: 'RSS' },
@@ -81,7 +88,6 @@ export const siteConfig = {
   heroImages: [
     '/images/saber花间意.jpg',
     '/images/海浪海鸥.jpg',
-  
     '/images/碧海蓝天.jpg',
     '/images/晴川万里.jpg',
 

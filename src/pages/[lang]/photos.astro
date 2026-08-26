@@ -158,7 +158,8 @@ const tabs = [
 
 <style>
   .photos-page {
-    max-width: 900px;
+    /* 与归档"分类"瀑布流同宽 */
+    max-width: 980px;
     margin: 1.5rem auto 0;
   }
 
@@ -206,49 +207,45 @@ const tabs = [
     display: block;
   }
 
-  /* 瀑布流展示墙:网格布局,横屏图横跨两列(长宽约放大两倍,与竖屏协调) */
+  /* 瀑布流展示墙:CSS 多列(与归档瀑布流一致),逐列紧密填充、密集不稀疏;
+     每张照片保持自身宽高比(不强制统一比例) */
   .photo-masonry {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-flow: dense;
-    gap: 14px;
-    align-items: start;
+    columns: 3;
+    column-gap: 20px;
   }
   .photo-item {
     display: block;
     width: 100%;
     height: auto;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px;
     border-radius: var(--radius);
     background: var(--surface-2);
   }
-  .photo-item.is-landscape {
-    grid-column: span 2;
-  }
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     .photo-masonry {
-      grid-template-columns: repeat(2, 1fr);
+      columns: 2;
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .photo-masonry {
-      grid-template-columns: 1fr;
-    }
-    .photo-item.is-landscape {
-      grid-column: span 1;
+      columns: 1;
     }
   }
 
-  /* 作品集瀑布流 */
+  /* 作品集瀑布流(与"分类"同宽、同间距) */
   .portfolio-masonry {
     columns: 3;
-    column-gap: 14px;
+    column-gap: 20px;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     .portfolio-masonry {
       columns: 2;
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .portfolio-masonry {
       columns: 1;
     }
@@ -258,7 +255,9 @@ const tabs = [
     position: relative;
     display: block;
     break-inside: avoid;
-    margin-bottom: 14px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px;
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid var(--border);

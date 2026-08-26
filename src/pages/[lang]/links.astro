@@ -100,9 +100,9 @@ const groups = friends as FriendGroup[];
 
   .links-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 每行 2~3 列 */
-    gap: 36px;
-    width: 90%;
+    grid-template-columns: repeat(3, 1fr); /* 与 TRpuppy 一致:桌面 3 列 */
+    gap: 16px; /* 紧凑间距,更像卡片墙 */
+    width: 100%;
     margin: 0 auto;
   }
 
@@ -120,8 +120,9 @@ const groups = friends as FriendGroup[];
   .friend-card {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
+    gap: 12px;
+    padding: 10px 14px; /* 紧凑内边距,贴近 TRpuppy */
+    border-radius: 16px;
     color: inherit;
     transition:
       transform var(--transition-fast),
