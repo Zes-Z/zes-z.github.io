@@ -45,22 +45,3 @@ export function categoriesOf(posts: PostEntry[]): Map<string, number> {
   }
   return new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
 }
-
-export function tagsOf(posts: PostEntry[]): Map<string, number> {
-  const map = new Map<string, number>();
-  for (const post of posts) {
-    for (const t of post.data.tag ?? []) {
-      if (t) map.set(t, (map.get(t) ?? 0) + 1);
-    }
-  }
-  return new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
-}
-
-/** Stable ratio key (0–2) for the archive masonry card of a post. */
-export function ratioIndexFor(id: string, count = 3): number {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
-  }
-  return hash % count;
-}

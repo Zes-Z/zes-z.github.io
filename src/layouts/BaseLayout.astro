@@ -68,7 +68,6 @@ const pageDescription = description ?? localize(siteConfig.description, lang);
     <title>{pageTitle}</title>
   </head>
   <body>
-    <div class="meteors" aria-hidden="true"></div>
     <Header lang={lang} />
     <main id="main" class:list={{ 'main--full': fullWidth }}>
       {fullWidth ? <slot /> : <div class="container-x"><slot /></div>}
@@ -76,38 +75,6 @@ const pageDescription = description ?? localize(siteConfig.description, lang);
     <Footer lang={lang} />
     <SearchPalette lang={lang} />
     <Lightbox />
-    <script>
-      // 背景彩色彗星:生成随机位置/颜色/时长的多条"多巴胺"彗星,
-      // 每次导航都重新随机,避免位置固定、颜色单一。
-      const rand = (min: number, max: number) => min + Math.random() * (max - min);
-      const cometsPalette = [
-        'rgba(120, 190, 255, 0.75)', // 天蓝
-        'rgba(255, 140, 200, 0.75)', // 粉
-        'rgba(200, 140, 255, 0.75)', // 紫
-        'rgba(255, 190, 90, 0.75)', // 橙
-        'rgba(110, 220, 170, 0.75)', // 薄荷绿
-        'rgba(255, 110, 110, 0.7)', // 珊瑚红
-        'rgba(255, 225, 120, 0.75)', // 柠檬黄
-      ];
-      const bindComets = () => {
-        const layer = document.querySelector<HTMLElement>('.meteors');
-        if (!layer || layer.dataset.ready === 'true') return;
-        layer.dataset.ready = 'true';
-        for (let n = 0; n < 6; n++) {
-          const i = document.createElement('i');
-          const color = cometsPalette[Math.floor(Math.random() * cometsPalette.length)]!;
-          i.style.setProperty('--comet-color', color);
-          i.style.setProperty('--comet-len', `${rand(120, 240)}px`);
-          i.style.setProperty('--comet-top', `${rand(4, 92)}%`);
-          i.style.setProperty('--comet-dur', `${rand(7, 12)}s`);
-          i.style.setProperty('--comet-delay', `-${rand(0, 12)}s`);
-          i.style.setProperty('--comet-angle', `${rand(-2, 2)}deg`);
-          layer.appendChild(i);
-        }
-      };
-      bindComets();
-      document.addEventListener('astro:page-load', bindComets);
-    </script>
   </body>
 </html>
 

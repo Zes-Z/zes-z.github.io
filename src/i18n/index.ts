@@ -3,9 +3,7 @@ import { siteConfig } from '../site.config';
 
 /** UI string dictionary for English (the key source of truth). */
 const en = {
-  'nav.home': 'Home',
   'nav.archive': 'Archive',
-  'nav.recipe': 'Recipe',
   'nav.photos': 'Photos',
   'nav.links': 'Friends',
 
@@ -18,7 +16,6 @@ const en = {
   'search.open': 'Search',
   'search.placeholder': 'Search posts…',
   'search.regex': 'Regex',
-  'search.literal': 'Literal',
   'search.noResults': 'No matching posts.',
   'search.count': 'results',
   'search.invalidRegex': 'Invalid regular expression',
@@ -27,10 +24,7 @@ const en = {
   'home.welcome': 'Welcome',
 
   'archive.categories': 'Categories',
-  'archive.tags': 'Tags',
   'archive.all': 'All posts',
-  'archive.timeline': 'Timeline',
-  'archive.masonry': 'Gallery',
   'archive.noMatch': 'No posts match the current filters.',
 
   'photos.wall': 'All',
@@ -39,24 +33,14 @@ const en = {
   'photos.comingDesc': 'This section is still under construction — stay tuned.',
   'photos.empty': 'No photos yet.',
 
-  // 'links.title': 'Friends',
-  // 'links.desc': 'Sites I read and recommend.',
-
-  'post.draft': 'Draft',
   'post.toc': 'On this page',
-
-  'footer.copyright': 'Copyright',
-
-  'misc.posts': 'posts',
 } satisfies Record<string, string>;
 
 export type UiKey = keyof typeof en;
 
 /** UI string dictionary for Chinese. */
 const zh: Record<UiKey, string> = {
-  'nav.home': '首页',
   'nav.archive': '归档',
-  'nav.recipe': '菜单',
   'nav.photos': '相册',
   'nav.links': '友链',
   'lang.name': '中文',
@@ -68,7 +52,6 @@ const zh: Record<UiKey, string> = {
   'search.open': '搜索',
   'search.placeholder': '搜索文章…',
   'search.regex': '正则',
-  'search.literal': '普通',
   'search.noResults': '没有匹配的文章。',
   'search.count': '条结果',
   'search.invalidRegex': '正则表达式无效',
@@ -77,10 +60,7 @@ const zh: Record<UiKey, string> = {
   'home.welcome': '欢迎',
 
   'archive.categories': '分类',
-  'archive.tags': '标签',
   'archive.all': '全部文章',
-  'archive.timeline': '时间线',
-  'archive.masonry': '画廊',
   'archive.noMatch': '没有符合当前筛选的文章。',
 
   'photos.wall': '所有',
@@ -89,22 +69,12 @@ const zh: Record<UiKey, string> = {
   'photos.comingDesc': '该板块正在建设中,敬请期待。',
   'photos.empty': '暂无照片。',
 
-  // 'links.title': '友链',
-  // 'links.desc': '我常读与推荐的站点。',
-
-  'post.draft': '草稿',
   'post.toc': '本页目录',
-
-  'footer.copyright': '版权声明',
-
-  'misc.posts': '篇文章',
 };
 
 /** UI string dictionary for Japanese. */
 const ja: Record<UiKey, string> = {
-  'nav.home': 'ホーム',
   'nav.archive': 'アーカイブ',
-  'nav.recipe': '料理',
   'nav.photos': '写真',
   'nav.links': '友達リンク',
 
@@ -117,7 +87,6 @@ const ja: Record<UiKey, string> = {
   'search.open': '検索',
   'search.placeholder': '記事を検索…',
   'search.regex': '正規表現',
-  'search.literal': '通常',
   'search.noResults': '一致する記事がありません。',
   'search.count': '件',
   'search.invalidRegex': '正規表現が無効です',
@@ -126,10 +95,7 @@ const ja: Record<UiKey, string> = {
   'home.welcome': 'ようこそ',
 
   'archive.categories': 'カテゴリ',
-  'archive.tags': 'タグ',
   'archive.all': 'すべての記事',
-  'archive.timeline': 'タイムライン',
-  'archive.masonry': 'ギャラリー',
   'archive.noMatch': '条件に一致する記事がありません。',
 
   'photos.wall': 'すべて',
@@ -138,15 +104,7 @@ const ja: Record<UiKey, string> = {
   'photos.comingDesc': 'このセクションは準備中です。お楽しみに。',
   'photos.empty': '写真はまだありません。',
 
-  // 'links.title': '友達リンク',
-  // 'links.desc': 'よく読む・おすすめのサイト。',
-
-  'post.draft': '下書き',
   'post.toc': '目次',
-
-  'footer.copyright': '著作権表示',
-
-  'misc.posts': '記事',
 };
 
 const dictionaries: Record<Language, Record<UiKey, string>> = { en, zh, ja };

@@ -73,7 +73,8 @@ export const siteConfig = {
     {
       icon: 'cloud',
       // 云盘链接:换成你自己的网盘地址(如夸克/百度/蓝奏/OD 等)
-      href: 'https://pan.quark.cn/',
+      href: 'https://www.alipan.com/s/X4GEM51VBnM',
+      // 提取码:3z3q
       label: { eng: 'Cloud Drive', cn: '云盘', jap: 'クラウドドライブ' },
     },
 
@@ -109,14 +110,8 @@ export const siteConfig = {
   /** How many pinned posts the home page shows (1 large + the rest). */
   pinnedMax: 3,
 
-  /** Max tags that can be selected at once in the archive filters. */
-  maxSelectedTags: 3,
-
   /** Welcome article rendered as the last home block (content/pages). */
   welcomePage: 'welcome',
-
-  /** Number of masonry columns (1–3) on wide / medium / small screens. */
-  masonryColumns: { wide: 3, medium: 2, small: 1 },
 
   /** Ratio cycle used by the archive masonry cards. */
   masonryRatios: ['2 / 3', '3 / 2', '1 / 1'] as const,

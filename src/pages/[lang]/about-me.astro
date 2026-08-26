@@ -12,7 +12,6 @@ export async function getStaticPaths() {
 const { lang } = Astro.params as { lang: Language };
 
 const page = await getEntry('pages', `${lang}/about-me`);
-const title = page?.data.title ?? (lang === 'zh' ? 'About me and this site' : 'About me and this site');
 const html = (await renderMarkdown(page?.body ?? '')).html;
 ---
 
