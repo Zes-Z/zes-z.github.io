@@ -81,19 +81,24 @@ export const siteConfig = {
   heroImages: [
     '/images/saber花间意.jpg',
     '/images/海浪海鸥.jpg',
-    '/images/码头木桥.jpg',
+  
     '/images/碧海蓝天.jpg',
-    '/images/蟹老板办公室.jpg',
+    '/images/晴川万里.jpg',
 
   ],
-  /** 友链页主图:images = 轮播图片,interval = 切换间隔(毫秒)。 */
+ 
+  /** 主页轮播主图切换间隔(毫秒)。大约 3000 = 3 秒。 */
+  heroInterval: 6000,
+
+ /** 友链页主图:images = 轮播图片,interval = 切换间隔(毫秒)。 */
   linksHero: {
-    images: ['/images/线条小狗西瓜游泳池.jpg', '/images/海绵宝宝自拍合照.jpg'],
+    images: [
+      // '/images/线条小狗西瓜游泳池.jpg', 
+      '/images/海绵宝宝自拍合照.jpg',
+      '/images/郊外旅行线条小狗.jpg',
+    ],
     interval: 4000,
   },
-
-  /** 主页轮播主图切换间隔(毫秒)。大约 3000 = 3 秒。 */
-  heroInterval: 3000,
 
   /** How many pinned posts the home page shows (1 large + the rest). */
   pinnedMax: 3,

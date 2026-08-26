@@ -5,7 +5,7 @@ pubDate: "2026-03-04"
 category: "Math & Coding"
 tag: [markdown,introduction]
 
-postImage: "./落日余晖.jpg"
+postImage: "./海滨蓝天白云.jpg"
 homepined: true
 pinedOrder: 2
 draft: false
