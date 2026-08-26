@@ -4,7 +4,7 @@ description: ""
 pubDate: "2026-05-10"
 category: "Omnium"
 # updatedDate: "2026-06-23"
-tag: []
+tag: [just do it!]
 postImage: "./蟹老板办公室.jpg"
 homepined: true
 pinedOrder: 1

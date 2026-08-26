@@ -479,6 +479,7 @@ button {
 
 /* 代码块容器(顶栏 + 代码) */
 .prose .code-block {
+  position: relative; /* 供右上角悬浮复制按钮定位 */
   margin: 1.3em 0;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -535,7 +536,33 @@ button {
   border-color: var(--border-strong);
 }
 
-/* syntax-highlighted blocks (shiki) */
+/* 无语言/无文件名的代码块:右上角悬浮复制按钮(悬停代码块时显示) */
+.prose .code-block-copy--float {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  opacity: 0;
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  transition:
+    opacity 0.18s ease,
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.prose .code-block:hover .code-block-copy--float {
+  opacity: 1;
+}
+.prose .code-block-copy--float:hover {
+  color: var(--hover);
+  background: var(--surface);
+  border-color: var(--border-strong);
+}
+
+/* syntax-highlighted blocks (shiki) + 无语言代码块
+   pre 本身(含没有 shiki 类的裸 pre)统一左侧内边距,与其它代码块对齐 */
+.prose .code-block pre,
 .prose pre.shiki {
   margin: 0;
   /* 左侧留出约 1~2 个字符的距离,不与左边框贴得太近 */
@@ -547,6 +574,7 @@ button {
   font-size: 0.86rem;
   line-height: 1.65;
 }
+.prose .code-block pre code,
 .prose pre.shiki code {
   display: block;
   min-width: max-content;

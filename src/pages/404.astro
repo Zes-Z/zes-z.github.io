@@ -1,18 +1,67 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../site.config';
+import { t } from '../i18n';
 import { withBase } from '../utils/paths';
+import type { Language } from '../types';
 
-const lang = siteConfig.defaultLang;
+const lang: Language = siteConfig.defaultLang;
+const notFoundTitle = t(lang, '404.title');
+const notFoundDesc = t(lang, '404.desc');
+const homeLabel = t(lang, '404.home');
 ---
 
 <BaseLayout lang={lang} title="404">
   <div class="not-found">
     <p class="nf-code">404</p>
-    <h1 class="nf-title">Page not found</h1>
-    <a class="nf-home" href={withBase(`/${lang}`)}>{siteConfig.title}</a>
+    <h1 class="nf-title">{notFoundTitle}</h1>
+    <p class="nf-desc">{notFoundDesc}</p>
+    <a class="nf-home" href={withBase(`/${lang}`)}>{homeLabel}</a>
   </div>
 </BaseLayout>
+
+<script>
+  // 404 是静态单页:任何未知路径都由它承接。
+  // 用当前 URL 的语言段动态本地化文案,并把语言切换指到"对应语言的 404",
+  // 这样在 404 页也能正常切换语言而不会跳回首页。
+  const langs = ['zh', 'en', 'ja'];
+  const dict: Record<string, { t: string; d: string; h: string }> = {
+    zh: { t: '页面不存在', d: '你访问的页面不存在或已被移除。', h: '回到首页' },
+    en: { t: 'Page not found', d: 'The page you are looking for does not exist or was removed.', h: 'Go home' },
+    ja: { t: 'ページが見つかりません', d: 'お探しのページは存在しないか、削除されました。', h: 'ホームへ戻る' },
+  };
+
+  const detect = () => {
+    const seg = location.pathname.replace(/^\/+/, '').split('/')[0] ?? '';
+    return (langs.includes(seg) ? seg : 'zh') as 'zh' | 'en' | 'ja';
+  };
+
+  const applyLang = (lang: 'zh' | 'en' | 'ja') => {
+    document.documentElement.lang = lang;
+    const d = dict[lang];
+    const title = document.querySelector<HTMLElement>('.nf-title');
+    const desc = document.querySelector<HTMLElement>('.nf-desc');
+    const home = document.querySelector<HTMLAnchorElement>('.nf-home');
+    if (title) title.textContent = d.t;
+    if (desc) desc.textContent = d.d;
+    if (home) {
+      home.textContent = d.h;
+      home.href = '/' + lang;
+    }
+    // 语言切换:指到对应语言的 404(该路径由服务器回落到 404.html)
+    const pickers = document.querySelectorAll<HTMLAnchorElement>('.lang-btn');
+    const cur = langs.indexOf(lang);
+    const next = langs[(cur + 1) % langs.length]!;
+    pickers.forEach((a) => {
+      a.href = '/' + next + '/404';
+      const code = a.querySelector<HTMLElement>('.lang-current');
+      if (code) code.textContent = next.toUpperCase();
+    });
+  };
+
+  applyLang(detect());
+  document.addEventListener('astro:page-load', () => applyLang(detect()));
+</script>
 
 <style>
   .not-found {
@@ -36,9 +85,14 @@ const lang = siteConfig.defaultLang;
   }
   .nf-title {
     margin: 0;
+    color: var(--text);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .nf-desc {
+    margin: 0;
     color: var(--text-soft);
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 0.95rem;
   }
   .nf-home {
     margin-top: 1rem;

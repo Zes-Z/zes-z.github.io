@@ -4,7 +4,7 @@ title: 明日はいい天気だろう
 description: ""
 pubDate: 2026-05-20
 category: "Omnium"
-tag: []
+tag: [capriccio]
 postImage: " "
 homepined: false
 pinedOrder: 0

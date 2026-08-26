@@ -34,6 +34,10 @@ const en = {
   'photos.empty': 'No photos yet.',
 
   'post.toc': 'On this page',
+
+  '404.title': 'Page not found',
+  '404.desc': 'The page you are looking for does not exist or was removed.',
+  '404.home': 'Go home',
 } satisfies Record<string, string>;
 
 export type UiKey = keyof typeof en;
@@ -70,6 +74,10 @@ const zh: Record<UiKey, string> = {
   'photos.empty': '暂无照片。',
 
   'post.toc': '本页目录',
+
+  '404.title': '页面不存在',
+  '404.desc': '你访问的页面不存在或已被移除。',
+  '404.home': '回到首页',
 };
 
 /** UI string dictionary for Japanese. */
@@ -105,6 +113,10 @@ const ja: Record<UiKey, string> = {
   'photos.empty': '写真はまだありません。',
 
   'post.toc': '目次',
+
+  '404.title': 'ページが見つかりません',
+  '404.desc': 'お探しのページは存在しないか、削除されました。',
+  '404.home': 'ホームへ戻る',
 };
 
 const dictionaries: Record<Language, Record<UiKey, string>> = { en, zh, ja };

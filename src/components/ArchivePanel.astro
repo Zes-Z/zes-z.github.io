@@ -154,7 +154,13 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
           <time>${post.date}</time>
           <span class="masonry-title">${escapeHtml(post.title)}</span>
           <span class="masonry-chips">
-            <span class="chip">${escapeHtml(post.category)}</span>
+            ${
+              post.tags.length
+                ? post.tags
+                    .map((tagName) => `<span class="chip">${escapeHtml(tagName)}</span>`)
+                    .join('')
+                : `<span class="chip">${escapeHtml(post.category)}</span>`
+            }
           </span>
         </span>
       `;
@@ -415,7 +421,8 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(180deg, transparent 46%, rgba(10, 12, 16, 0.78));
+    /* 比上一次略强一点:从约一半处开始变暗,保证底部日期/标题文字清晰可读 */
+    background: linear-gradient(180deg, transparent 52%, rgba(10, 12, 16, 0.6));
   }
 
   :global(.masonry-caption) {
@@ -443,6 +450,12 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
     -webkit-box-orient: vertical;
     overflow: hidden;
     overflow-wrap: break-word;
+  }
+  :global(.masonry-chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
   }
   :global(.masonry-chips .chip) {
     background: rgba(255, 255, 255, 0.18);

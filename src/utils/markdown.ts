@@ -108,49 +108,64 @@ function rehypeCodeBlocks() {
     const filename =
       typeof code.properties?.dataFilename === 'string' ? code.properties.dataFilename : '';
 
-    const bar: any = {
-      type: 'element',
-      tagName: 'div',
-      properties: { className: ['code-block-bar'] },
-      children: [],
-    };
-    if (lang) {
-      bar.children.push({
-        type: 'element',
-        tagName: 'span',
-        properties: { className: ['code-block-lang'] },
-        children: [{ type: 'text', value: lang }],
-      });
-    }
-    if (filename) {
-      bar.children.push({
-        type: 'element',
-        tagName: 'span',
-        properties: { className: ['code-block-filename'] },
-        children: [{ type: 'text', value: filename }],
-      });
-    }
-    bar.children.push(
-      { type: 'element', tagName: 'span', properties: { className: ['code-block-spacer'] }, children: [] },
-      {
-        type: 'element',
-        tagName: 'button',
-        properties: {
-          className: ['code-block-copy'],
-          type: 'button',
-          'data-copy-code': '',
-          'aria-label': 'Copy code',
-          title: 'Copy code',
-        },
-        children: [{ type: 'text', value: '⧉' }],
-      }
-    );
+    // 既有顶栏信息也有复制按钮;无信息时复制按钮做成右上角悬浮按钮,
+    // 保证任何代码块都可复制,同时不出现空白的顶栏行。
+    const hasBarInfo = Boolean(lang || filename);
 
+    const copyButton: any = {
+      type: 'element',
+      tagName: 'button',
+      properties: {
+        className: ['code-block-copy', hasBarInfo ? '' : 'code-block-copy--float'],
+        type: 'button',
+        'data-copy-code': '',
+        'aria-label': 'Copy code',
+        title: 'Copy code',
+      },
+      children: [{ type: 'text', value: '⧉' }],
+    };
+
+    if (hasBarInfo) {
+      const bar: any = {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['code-block-bar'] },
+        children: [],
+      };
+      if (lang) {
+        bar.children.push({
+          type: 'element',
+          tagName: 'span',
+          properties: { className: ['code-block-lang'] },
+          children: [{ type: 'text', value: lang }],
+        });
+      }
+      if (filename) {
+        bar.children.push({
+          type: 'element',
+          tagName: 'span',
+          properties: { className: ['code-block-filename'] },
+          children: [{ type: 'text', value: filename }],
+        });
+      }
+      bar.children.push(
+        { type: 'element', tagName: 'span', properties: { className: ['code-block-spacer'] }, children: [] },
+        copyButton
+      );
+      return {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['code-block'] },
+        children: [bar, pre],
+      };
+    }
+
+    // 无语言无文件名:只放右上角悬浮复制按钮,不生成顶栏
     return {
       type: 'element',
       tagName: 'div',
       properties: { className: ['code-block'] },
-      children: [bar, pre],
+      children: [pre, copyButton],
     };
   }
 }
