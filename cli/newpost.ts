@@ -134,8 +134,8 @@ async function newPost() {
             value: 'Math & Coding',
           },
           {
-            title: 'Source',
-            value: 'Source',
+            title: 'Ling.',
+            value: 'Ling.',
           },
           {
             title: '输入以新建',

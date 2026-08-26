@@ -2,7 +2,7 @@
 title: "Link to something"
 description: ""
 pubDate: "2026-04-11"
-category: "Source"
+category: Omnium
 tag: [links]
 
 postImage: "./清新草原 弯曲河流 蓝天白云.jpg"

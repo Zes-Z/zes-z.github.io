@@ -2,7 +2,7 @@
 title: "词向量"
 description: "一文简介词向量的发展历程,及它和大语言模型的关联"
 pubDate: "2026-03-24"
-category: "Omnium"
+category: Ling.
 tag: [词向量]
 
 draft: false

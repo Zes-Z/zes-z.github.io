@@ -2,7 +2,7 @@
 title: "安装与自定义使用MeCab"
 description: "日语词素解析器MeCab的3种使用方式"
 pubDate: "2026-04-02"
-category: "Source"
+category: "Ling."
 tag: [mecab,分词]
 postImage: " "
 homepined: false
