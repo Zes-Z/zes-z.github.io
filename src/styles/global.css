@@ -52,7 +52,7 @@ html[data-theme='light'] {
 /* ---------- dark mode ---------- */
 html[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #101218;
+  --bg: #111112de;
   --surface: #181b22;
   --surface-2: #1f232c;
   --border: #2a2f3a;
@@ -63,7 +63,7 @@ html[data-theme='dark'] {
   --accent: #7ba5ff;
   --accent-soft: rgba(123, 165, 255, 0.14);
   --accent-strong: #a3c0ff;
-  --accent-contrast: #101218;
+  --accent-contrast: #101218e0;
   --hover: #9fd4ac; /* 悬停字色:浅绿(暗黑模式) */
   --gold: #d9a93f; /* 当前页面高亮:金色(暗黑模式) */
   --nav-text: #e9ebf1; /* 导航栏字色(暗黑模式保持浅色) */

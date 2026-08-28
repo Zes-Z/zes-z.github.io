@@ -110,9 +110,6 @@ export const siteConfig = {
   /** How many pinned posts the home page shows (1 large + the rest). */
   pinnedMax: 3,
 
-  /** Welcome article rendered as the last home block (content/pages). */
-  welcomePage: 'welcome',
-
   /** Ratio cycle used by the archive masonry cards (3 列时对应实际显示 4/6·9/6·6/6,可密铺)。 */
   masonryRatios: ['3 / 2', '2 / 3', '1 / 1'] as const,
 

@@ -22,7 +22,6 @@ const en = {
   'search.invalidRegex': 'Invalid regular expression',
 
   'home.pinned': 'Pinned',
-  'home.welcome': 'Welcome',
 
   'archive.categories': 'Categories',
   'archive.all': 'All posts',
@@ -63,7 +62,6 @@ const zh: Record<UiKey, string> = {
   'search.invalidRegex': '正则表达式无效',
 
   'home.pinned': '置顶文章',
-  'home.welcome': '欢迎',
 
   'archive.categories': '分类',
   'archive.all': '全部文章',
@@ -103,7 +101,6 @@ const ja: Record<UiKey, string> = {
   'search.invalidRegex': '正規表現が無効です',
 
   'home.pinned': 'ピン留め記事',
-  'home.welcome': 'ようこそ',
 
   'archive.categories': 'カテゴリ',
   'archive.all': 'すべての記事',

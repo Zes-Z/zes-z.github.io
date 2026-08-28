@@ -57,7 +57,7 @@ const { lang } = Astro.props;
     root.setAttribute('data-theme', mode);
     root.setAttribute('data-code-scheme', mode === 'dark' ? 'dark' : 'light');
     const meta = document.querySelector<HTMLMetaElement>("meta[name='theme-color']");
-    if (meta) meta.content = mode === 'dark' ? '#101218' : '#eef6ef';
+    if (meta) meta.content = mode === 'dark' ? '#101218e0' : '#eef6ef';
     // 切换时短暂启用过渡,让颜色柔和变化;页面加载/导航不触发
     root.classList.add('theme-anim');
     window.setTimeout(() => root.classList.remove('theme-anim'), 420);

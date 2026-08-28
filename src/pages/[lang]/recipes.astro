@@ -21,12 +21,15 @@ const recipes = await Promise.all(
     .filter((r) => !r.data.draft)
     .map(async (r) => {
       const slug = r.id.slice(lang.length + 1);
+      const date = r.data.pubDate ?? new Date(0);
       return {
         id: r.id,
         href: withBase(`/${lang}/recipes/${slug}`),
         title: r.data.title,
         description: r.data.description ?? '',
         categories: r.data.categories ?? '',
+        tags: r.data.tags ?? [],
+        date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`,
         cover: await recipeCover(slug),
       };
     })
@@ -76,7 +79,13 @@ for (const r of recipes) {
                 </span>
                 <span class="recipe-veil"></span>
                 <span class="recipe-body">
+                  <time class="recipe-date">{r.date}</time>
                   <span class="recipe-title">{r.title}</span>
+                  {r.tags.length > 0 && (
+                    <span class="recipe-chips">
+                      {r.tags.map((tag) => <span class="chip">{tag}</span>)}
+                    </span>
+                  )}
                   {r.description && <span class="recipe-desc">{r.description}</span>}
                 </span>
               </a>
@@ -232,9 +241,25 @@ for (const r of recipes) {
     inset: auto 14px 12px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     color: #fff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .recipe-date {
+    font-size: 0.72rem;
+    opacity: 0.85;
+  }
+
+  .recipe-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .recipe-chips .chip {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   .recipe-title {

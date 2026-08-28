@@ -1,15 +1,12 @@
 ---
-import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from './Hero.astro';
 import PinnedGrid from './PinnedGrid.astro';
-import WelcomeBlock from './WelcomeBlock.astro';
 import { siteConfig, siteSubtitle } from '../site.config';
 import { t, localize } from '../i18n';
 import type { Language } from '../types';
 import { getPinnedPosts, slugOf } from '../utils/posts';
 import { postHref } from '../utils/paths';
-import { renderMarkdown } from '../utils/markdown';
 import { resolvePostImage } from '../utils/images';
 
 interface Props {
@@ -31,9 +28,6 @@ const pinnedCards = await Promise.all(
   }))
 );
 
-const welcome = await getEntry('pages', `${lang}/${siteConfig.welcomePage}`);
-const welcomeHtml = welcome ? (await renderMarkdown(welcome.body ?? '')).html : '';
-const welcomeTitle = welcome?.data.title ?? t(lang, 'home.welcome');
 const heroSubtitleText = siteSubtitle();
 const heroSubtitle = heroSubtitleText ? localize(heroSubtitleText, lang) : undefined;
 ---
@@ -57,14 +51,10 @@ const heroSubtitle = heroSubtitleText ? localize(heroSubtitleText, lang) : undef
       </section>
     )
   }
-
-  <section class="home-section container-x">
-    <WelcomeBlock title={welcomeTitle} html={welcomeHtml} />
-  </section>
 </BaseLayout>
 
 <style>
   .home-section {
-    margin-top: clamp(2.5rem, 6vw, 4rem);
+    margin-top: clamp(2.1rem, 0vw, 2.7rem);
   }
 </style>
