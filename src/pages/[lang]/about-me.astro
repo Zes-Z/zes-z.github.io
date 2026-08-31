@@ -15,9 +15,9 @@ const page = await getEntry('pages', `${lang}/about-me`);
 const html = (await renderMarkdown(page?.body ?? '')).html;
 ---
 
-<BaseLayout lang={lang} title={page?.data.title ?? 'About me and this site'}>
+<BaseLayout lang={lang} title={page?.data.title ?? 'About zes and this site'}>
   <article class="about-me-page">
-    <h1 class="about-me-title">{page?.data.title ?? 'About me and this site'}</h1>
+    <h1 class="about-me-title">{page?.data.title ?? 'About zes and this site'}</h1>
     <div class="prose about-me-body" set:html={html} />
   </article>
 </BaseLayout>

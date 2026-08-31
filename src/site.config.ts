@@ -7,7 +7,7 @@ import type { Language, LocalizedText } from './types';
 export const siteConfig = {
   /** Site name shown in the footer and <title>. */
   title: 'Zest',
-  herostr:'About me and this site',
+  herostr:'About zes and this site',
   /** Site subtitle (supports the three languages). */
   // subtitle: {
   //   eng: 'A fresh trilingual blog theme',
