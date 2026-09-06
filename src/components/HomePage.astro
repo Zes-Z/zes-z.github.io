@@ -37,8 +37,10 @@ const heroSubtitle = heroSubtitleText ? localize(heroSubtitleText, lang) : undef
     images={[...siteConfig.heroImages]}
     height="full"
     position="bottom-left"
-    title={siteConfig.herostr}
-    titleHref={`/${lang}/about-me`}
+    title={siteConfig.welcomeText}
+    titleHref={siteConfig.welcomeHref(lang)}
+    rightTitle={siteConfig.aboutZes.text}
+    rightTitleHref={siteConfig.aboutZes.href}
     subtitle={heroSubtitle}
     interval={siteConfig.heroInterval}
   />

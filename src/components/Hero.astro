@@ -10,6 +10,10 @@ interface Props {
   subtitle?: string;
   /** 将 title 渲染为指向该链接的文章链接(如"关于我"一文)。 */
   titleHref?: string;
+  /** 右下角附加文字链接(如个人展示站 "About Zes")。 */
+  rightTitle?: string;
+  /** 右下角附加文字链接的目标。 */
+  rightTitleHref?: string;
   /** Overlay placement. */
   position?: 'center' | 'bottom-left';
   /** Crossfade interval in ms. */
@@ -22,10 +26,13 @@ const {
   title,
   subtitle,
   titleHref,
+  rightTitle,
+  rightTitleHref,
   position = 'center',
   interval = 6000,
 } = Astro.props;
 const hasOverlay = Boolean(title || subtitle);
+const hasRightTitle = Boolean(rightTitle);
 ---
 
 <section class:list={['hero', `hero--${height}`]} data-hero data-hero-interval={interval}>
@@ -54,6 +61,13 @@ const hasOverlay = Boolean(title || subtitle);
       {subtitle && <p class="hero-subtitle">{subtitle}</p>}
     </div>
   )}
+
+  {hasRightTitle &&
+    (rightTitleHref ? (
+      <a class="hero-title-link hero-corner-right" href={withBase(rightTitleHref)}>{rightTitle}</a>
+    ) : (
+      <span class="hero-title-link hero-corner-right">{rightTitle}</span>
+    ))}
 
   {height === 'full' && (
     <button class="scroll-down" type="button" data-scroll-down aria-label="scroll down">
@@ -175,7 +189,8 @@ const hasOverlay = Boolean(title || subtitle);
     padding: 0 5vw 2.7rem 4.2vw;
   }
   .hero-overlay--bottom-left .hero-title,
-  .hero-overlay--bottom-left .hero-title-link {
+  .hero-overlay--bottom-left .hero-title-link,
+  .hero-corner-right {
     /* 斜体艺术字:圆润无衬线(Nunito),保持倾斜与可读性 */
     font-size: clamp(1.2rem, 2.1vw, 1.7rem);
     font-weight: 600;
@@ -209,6 +224,17 @@ const hasOverlay = Boolean(title || subtitle);
   .hero-title-link:hover {
     border-color: #fff;
     color: #fff;
+  }
+
+  /* 右下角"About Zes"个人展示站文字链接 */
+  .hero-corner-right {
+    position: absolute;
+    right: 4.2vw;
+    bottom: 2.7rem;
+    z-index: 4;
+    max-width: min(40vw, 26em);
+    color: #fff;
+    text-align: right;
   }
 
 

@@ -1,5 +1,5 @@
 ---
-title: "About zes and this site"
+title: "Welcome to this site!"
 ---
 
 我是 **Zest** 的作者——一个喜欢安静工具、长距离散步和整齐笔记的开发者。

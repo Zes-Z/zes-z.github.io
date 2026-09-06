@@ -1,5 +1,5 @@
 ---
-title: "About zes and this site"
+title: "Welcome to this site!"
 ---
 
 I'm the author of **Zest** — a developer who likes quiet tools, long walks and well-kept notes.

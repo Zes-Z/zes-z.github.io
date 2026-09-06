@@ -1,5 +1,5 @@
 ---
-title: "About zes and this site"
+title: "Welcome to this site!"
 ---
 
 **Zest** の作者です。静かな道具と長い散歩、きちんとしたメモが好きな開発者です。
