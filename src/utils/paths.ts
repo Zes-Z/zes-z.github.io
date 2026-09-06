@@ -33,6 +33,11 @@ export function archiveHref(lang: Language): string {
   return withBase(`/${lang}/archive`);
 }
 
+/** Archive page filtered by a category, e.g. `/zh/archive?category=Omnium`. */
+export function archiveCategoryHref(lang: Language, category: string): string {
+  return `${archiveHref(lang)}?category=${encodeURIComponent(category)}`;
+}
+
 export function linksHref(lang: Language): string {
   return withBase(`/${lang}/links`);
 }

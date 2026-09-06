@@ -1,10 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TableOfContents from '../../../components/TableOfContents.astro';
+import AdjacentNav from '../../../components/AdjacentNav.astro';
 import { siteConfig } from '../../../site.config';
-import { t } from '../../../i18n';
 import type { Language } from '../../../types';
-import { recipeImages } from '../../../utils/recipes';
+import { recipeCover, recipeImages } from '../../../utils/recipes';
 import { withBase } from '../../../utils/paths';
 import { renderMarkdown } from '../../../utils/markdown';
 
@@ -13,6 +14,7 @@ export async function getStaticPaths() {
   for (const lang of siteConfig.langs) {
     const items = await getCollection('recipes', (r) => r.id.startsWith(`${lang}/`));
     for (const item of items) {
+      if (item.data.draft) continue;
       paths.push({ params: { lang, slug: item.id.slice(lang.length + 1) } });
     }
   }
@@ -23,80 +25,178 @@ const { lang, slug } = Astro.params as { lang: Language; slug: string };
 const recipe = (await getCollection('recipes')).find((r) => r.id === `${lang}/${slug}`);
 
 if (!recipe) {
-  return Astro.redirect(`/${lang}/recipes`);
+  return Astro.redirect(withBase(`/${lang}/recipes`));
 }
 
 const title = recipe.data.title;
 const description = recipe.data.description ?? '';
-const { html: bodyHtml } = await renderMarkdown(recipe.body ?? '');
+const categories = recipe.data.categories ?? '';
+const date = recipe.data.pubDate ?? new Date(0);
+const dateText = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+const { html: bodyHtml, headings } = await renderMarkdown(recipe.body ?? '');
 const images = await recipeImages(slug);
 const backHref = withBase(`/${lang}/recipes`);
+const hasToc = headings.length > 0;
+
+// 同语言食谱按发布时间正序(旧→新):时间上的上一篇放左侧,下一篇放右侧
+const orderedRecipes = (await getCollection('recipes', (r) => r.id.startsWith(`${lang}/`)))
+  .filter((r) => !r.data.draft)
+  .sort((a, b) => (a.data.pubDate?.getTime() ?? 0) - (b.data.pubDate?.getTime() ?? 0));
+const currentIndex = orderedRecipes.findIndex((r) => r.id === `${lang}/${slug}`);
+const prevRecipe = currentIndex > 0 ? orderedRecipes[currentIndex - 1] : undefined;
+const nextRecipe = currentIndex >= 0 && currentIndex < orderedRecipes.length - 1 ? orderedRecipes[currentIndex + 1] : undefined;
+
+async function adjacentRecipeCard(r: Awaited<ReturnType<typeof getCollection<'recipes'>>>[number]) {
+  const rSlug = r.id.slice(lang.length + 1);
+  const cover = await recipeCover(rSlug);
+  const pub = r.data.pubDate ?? new Date(0);
+  return {
+    href: withBase(`/${lang}/recipes/${rSlug}`),
+    title: r.data.title,
+    image: cover?.src,
+    ratio: cover?.ratio,
+    date: `${pub.getFullYear()}/${pub.getMonth() + 1}/${pub.getDate()}`,
+    tags: r.data.tags ?? [],
+    category: r.data.categories ?? '',
+  };
+}
+const prevCard = prevRecipe ? await adjacentRecipeCard(prevRecipe) : undefined;
+const nextCard = nextRecipe ? await adjacentRecipeCard(nextRecipe) : undefined;
 ---
 
 <BaseLayout lang={lang} title={title} description={description || undefined}>
-  <div class="recipe-detail">
-    <a class="recipe-back" href={backHref} data-back-to-recipes>← {t(lang, 'nav.recipe')}</a>
+  <div class="reading-progress" aria-hidden="true">
+    <span data-progress-bar></span>
+  </div>
 
-    <h1 class="recipe-detail-title">{title}</h1>
-    {description && <p class="recipe-detail-desc">{description}</p>}
+  <div class:list={['post-layout', { 'has-toc': hasToc }]}>
+    {hasToc && <TableOfContents {lang} {headings} />}
 
-    {bodyHtml && <div class="prose recipe-detail-body" set:html={bodyHtml} />}
-
-    {
-      images.length > 0 ? (
-        <div class="recipe-detail-masonry">
-          {
-            images.map((p) => (
-              <img
-                class:list={['recipe-photo', { 'is-landscape': p.landscape }]}
-                src={p.src}
-                alt=""
-                loading="lazy"
-                decoding="async"
-              />
-            ))
-          }
+    <article class="post">
+      <header class="post-header">
+        <h1 class="post-title">{title}</h1>
+        {description && <p class="post-description">{description}</p>}
+        <div class="post-meta">
+          <time datetime={date.toISOString()}>{dateText}</time>
+          {categories && <a class="chip chip-link" href={`${backHref}?category=${encodeURIComponent(categories)}`}>{categories}</a>}
+          {recipe.data.tags?.map((tagName) => <span class="chip chip--plain"># {tagName}</span>)}
         </div>
-      ) : (
-        <p class="recipes-empty">{t(lang, 'photos.empty')}</p>
-      )
-    }
+      </header>
+
+      <div class="prose post-body" set:html={bodyHtml} />
+
+      {
+        images.length > 0 && (
+          <div class="recipe-detail-masonry">
+            {
+              images.map((p) => (
+                <img
+                  class:list={['recipe-photo', { 'is-landscape': p.landscape }]}
+                  src={p.src}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              ))
+            }
+          </div>
+        )
+      }
+
+      <footer class="post-footer">
+        <AdjacentNav prev={prevCard} next={nextCard} />
+      </footer>
+    </article>
   </div>
 </BaseLayout>
 
+<script>
+  // 顶部细进度条:按阅读进度填充
+  const bar = document.querySelector<HTMLElement>('[data-progress-bar]');
+  const update = () => {
+    if (!bar) return;
+    const root = document.documentElement;
+    const total = root.scrollHeight - window.innerHeight;
+    bar.style.width = total > 0 ? `${Math.min(100, (window.scrollY / total) * 100)}%` : '0%';
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+</script>
+
 <style>
-  .recipe-detail {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 1.5rem 0 2rem;
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    height: 3px;
+    pointer-events: none;
+  }
+  .reading-progress span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--sky);
+    border-radius: 0 2px 2px 0;
   }
 
-  .recipe-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    color: var(--text-soft);
+  .post-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 780px);
+    gap: 2rem;
+    justify-content: center;
+    align-items: start;
   }
-  .recipe-back:hover {
+  .post-layout.has-toc {
+    grid-template-columns: 220px minmax(0, 780px);
+    gap: 2.5rem;
+    padding-left: 2.5rem;
+  }
+
+  .post {
+    max-width: 780px;
+    padding: clamp(1rem, 3vw, 2.5rem) 0;
+  }
+
+  .post-title {
+    margin: 0 0 0.7rem;
+    font-size: clamp(1.45rem, 3.4vw, 2rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .post-description {
+    margin: 0 0 1rem;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .post-meta time {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-faint);
+  }
+  .post-meta .chip-link {
+    text-decoration: none;
+  }
+  .post-meta .chip-link:hover {
+    background: color-mix(in srgb, var(--sky) 24%, transparent);
     color: var(--hover);
   }
 
-  .recipe-detail-title {
-    margin: 0 0 0.6rem;
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-    font-weight: 800;
-  }
-
-  .recipe-detail-desc {
-    margin: 0 0 0.6rem;
-    color: var(--text-soft);
-    font-size: 1rem;
-  }
-
-  .recipe-detail-body {
-    margin: 0.6rem 0 1.6rem;
+  .post-body {
+    margin-top: 1.4rem;
   }
 
   .recipe-detail-masonry {
@@ -105,6 +205,7 @@ const backHref = withBase(`/${lang}/recipes`);
     grid-auto-flow: dense;
     gap: 14px;
     align-items: start;
+    margin-top: 1.6rem;
   }
   .recipe-photo {
     display: block;
@@ -129,26 +230,20 @@ const backHref = withBase(`/${lang}/recipes`);
     }
   }
 
-  .recipes-empty {
-    padding: 3rem 1rem;
-    text-align: center;
-    color: var(--text-faint);
-    border: 1px dashed var(--border-strong);
-    border-radius: var(--radius);
+  .post-footer {
+    margin-top: 2.6rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 1024px) {
+    .post-layout,
+    .post-layout.has-toc {
+      grid-template-columns: minmax(0, 780px);
+      padding-left: 0;
+    }
+    .toc {
+      display: none;
+    }
   }
 </style>
-
-<script>
-  // "← 菜单"返回:优先回到点入前的页面(history),没有历史时回退到菜单页
-  const backLink = document.querySelector<HTMLAnchorElement>('[data-back-to-recipes]');
-  if (backLink) {
-    backLink.addEventListener('click', (event) => {
-      event.preventDefault();
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = backLink.href;
-      }
-    });
-  }
-</script>

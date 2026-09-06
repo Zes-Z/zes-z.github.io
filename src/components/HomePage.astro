@@ -6,7 +6,7 @@ import { siteConfig, siteSubtitle } from '../site.config';
 import { t, localize } from '../i18n';
 import type { Language } from '../types';
 import { getPinnedPosts, slugOf } from '../utils/posts';
-import { postHref } from '../utils/paths';
+import { archiveHref, postHref } from '../utils/paths';
 import { resolvePostImage } from '../utils/images';
 
 interface Props {
@@ -48,7 +48,10 @@ const heroSubtitle = heroSubtitleText ? localize(heroSubtitleText, lang) : undef
   {
     pinnedCards.length > 0 && (
       <section class="home-section container-x">
-        <h2 class="section-title">{t(lang, 'home.pinned')}</h2>
+        <div class="home-section-head">
+          <h2 class="section-title">{t(lang, 'home.pinned')}</h2>
+          <a class="all-posts-link" href={archiveHref(lang)}>{t(lang, 'home.allPosts')}</a>
+        </div>
         <PinnedGrid cards={pinnedCards} />
       </section>
     )
@@ -58,5 +61,25 @@ const heroSubtitle = heroSubtitleText ? localize(heroSubtitleText, lang) : undef
 <style>
   .home-section {
     margin-top: clamp(2.1rem, 0vw, 2.7rem);
+  }
+  .home-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .home-section-head .section-title {
+    margin-bottom: 1.25rem;
+  }
+  .all-posts-link {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--sky);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+  }
+  .all-posts-link:hover {
+    color: var(--hover);
   }
 </style>

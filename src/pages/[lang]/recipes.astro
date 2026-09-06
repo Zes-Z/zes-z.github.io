@@ -45,16 +45,16 @@ for (const r of recipes) {
 <BaseLayout lang={lang} title={t(lang, 'nav.recipe')}>
   <div class="recipes-page" data-recipes-page>
     <div class="recipes-categories" role="group" aria-label={t(lang, 'archive.categories')}>
-      <button class="category-pill is-active" type="button" data-category="" aria-pressed="true">
+      <a class="category-pill" data-category="" href={withBase(`/${lang}/recipes`)}>
         <span>{t(lang, 'archive.all')}</span>
         <span class="filter-count">{allCount}</span>
-      </button>
+      </a>
       {
         RECIPE_CATEGORIES.map((cat) => (
-          <button class="category-pill" type="button" data-category={cat} aria-pressed="false">
+          <a class="category-pill" data-category={cat} href={`${withBase(`/${lang}/recipes`)}?category=${encodeURIComponent(cat)}`}>
             <span>{cat}</span>
             <span class="filter-count">{categoryCounts.get(cat) ?? 0}</span>
-          </button>
+          </a>
         ))
       }
     </div>
@@ -106,7 +106,7 @@ for (const r of recipes) {
   if (page && page.dataset.ready !== 'true') {
     page.dataset.ready = 'true';
     const masonryEl = page.querySelector<HTMLElement>('[data-recipes-masonry]');
-    const pills = [...page.querySelectorAll<HTMLButtonElement>('[data-category]')];
+    const pills = [...page.querySelectorAll<HTMLAnchorElement>('[data-category]')];
     const cards = [...page.querySelectorAll<HTMLElement>('[data-recipes-masonry] .recipe-card')];
     const relayout = masonryEl ? initMasonry(masonryEl) : () => {};
 
@@ -114,7 +114,6 @@ for (const r of recipes) {
       pills.forEach((b) => {
         const active = b.dataset.category === cat;
         b.classList.toggle('is-active', active);
-        b.setAttribute('aria-pressed', String(active));
       });
       cards.forEach((card) => {
         card.hidden = cat !== '' && card.dataset.categories !== cat;
@@ -122,10 +121,8 @@ for (const r of recipes) {
       relayout();
     };
 
-    pills.forEach((b) => {
-      b.addEventListener('click', () => apply(b.dataset.category ?? ''));
-    });
-    apply('');
+    const category = new URLSearchParams(window.location.search).get('category') ?? '';
+    apply(category);
   }
 </script>
 
@@ -156,6 +153,7 @@ for (const r of recipes) {
     background: var(--surface);
     color: var(--text-soft);
     font-size: 0.9rem;
+    text-decoration: none;
     cursor: pointer;
     transition:
       background var(--transition-fast),

@@ -1,14 +1,14 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import TableOfContents from '../../../components/TableOfContents.astro';
+import AdjacentNav from '../../../components/AdjacentNav.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../../../site.config';
-import { t } from '../../../i18n';
 import type { Language } from '../../../types';
-import { slugOf } from '../../../utils/posts';
+import { getPublishedPosts, slugOf } from '../../../utils/posts';
 import { renderMarkdown } from '../../../utils/markdown';
-import { archiveHref } from '../../../utils/paths';
-import { resolvePostAsset } from '../../../utils/images';
+import { archiveHref, archiveCategoryHref, postHref } from '../../../utils/paths';
+import { resolvePostAsset, resolvePostImage, postImageRatio } from '../../../utils/images';
 import { getImage } from 'astro:assets';
 
 export async function getStaticPaths() {
@@ -45,6 +45,32 @@ const { html: bodyHtml, headings } = await renderMarkdown(post.body ?? '', {
     }
   },
 });
+// 同语言文章按发布时间正序(旧→新):时间上的上一篇放左侧,下一篇放右侧
+const orderedPosts = (await getPublishedPosts(lang)).sort(
+  (a, b) => (a.data.pubDate?.getTime() ?? 0) - (b.data.pubDate?.getTime() ?? 0)
+);
+const currentIndex = orderedPosts.findIndex((p) => p.id === `${lang}/${slug}`);
+const prevPost = currentIndex > 0 ? orderedPosts[currentIndex - 1] : undefined;
+const nextPost = currentIndex >= 0 && currentIndex < orderedPosts.length - 1 ? orderedPosts[currentIndex + 1] : undefined;
+
+async function adjacentCard(post: Awaited<ReturnType<typeof getPublishedPosts>>[number]) {
+  const postSlug = slugOf(post, lang);
+  const image = await resolvePostImage(postSlug, post.data.postImage, 600);
+  const ratio = await postImageRatio(postSlug, post.data.postImage, siteConfig.masonryRatios, '3 / 2');
+  const pub = post.data.pubDate ?? new Date(0);
+  return {
+    href: postHref(lang, postSlug),
+    title: post.data.title,
+    image,
+    ratio,
+    date: `${pub.getFullYear()}/${pub.getMonth() + 1}/${pub.getDate()}`,
+    tags: post.data.tag ?? [],
+    category: post.data.category,
+  };
+}
+const prevCard = prevPost ? await adjacentCard(prevPost) : undefined;
+const nextCard = nextPost ? await adjacentCard(nextPost) : undefined;
+
 // 无标题分级的文章:单列居中,正文不会被挤进目录列
 const hasToc = headings.length > 0;
 ---
@@ -59,16 +85,11 @@ const hasToc = headings.length > 0;
 
     <article class="post">
       <header class="post-header">
-        <p class="post-breadcrumb">
-          <a href={archiveHref(lang)}>{t(lang, 'nav.archive')}</a>
-          <span aria-hidden="true">/</span>
-          <span>{post.data.category}</span>
-        </p>
         <h1 class="post-title">{title}</h1>
         {description && <p class="post-description">{description}</p>}
         <div class="post-meta">
           <time datetime={date.toISOString()}>{dateText}</time>
-          <span class="chip">{post.data.category}</span>
+          <a class="chip chip-link" href={archiveCategoryHref(lang, post.data.category)}>{post.data.category}</a>
           {post.data.tag?.map((tagName) => <span class="chip chip--plain"># {tagName}</span>)}
         </div>
       </header>
@@ -76,12 +97,7 @@ const hasToc = headings.length > 0;
       <div class="prose post-body" set:html={bodyHtml} />
 
       <footer class="post-footer">
-        <a class="post-back" href={archiveHref(lang)}>
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M10 3.5 6 8l4 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          {t(lang, 'nav.archive')}
-        </a>
+        <AdjacentNav prev={prevCard} next={nextCard} />
       </footer>
     </article>
   </div>
@@ -139,21 +155,6 @@ const hasToc = headings.length > 0;
     padding: clamp(1rem, 3vw, 2.5rem) 0;
   }
 
-  .post-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 1rem;
-    font-size: 0.85rem;
-    color: var(--text-faint);
-  }
-  .post-breadcrumb a {
-    color: var(--text-soft);
-  }
-  .post-breadcrumb a:hover {
-    color: var(--hover);
-  }
-
   .post-title {
     margin: 0 0 0.7rem;
     font-size: clamp(1.45rem, 3.4vw, 2rem);
@@ -182,6 +183,13 @@ const hasToc = headings.length > 0;
     font-size: 0.85rem;
     color: var(--text-faint);
   }
+  .post-meta .chip-link {
+    text-decoration: none;
+  }
+  .post-meta .chip-link:hover {
+    background: color-mix(in srgb, var(--sky) 24%, transparent);
+    color: var(--hover);
+  }
 
   .post-body {
     margin-top: 1.4rem;
@@ -191,13 +199,6 @@ const hasToc = headings.length > 0;
     margin-top: 2.6rem;
     padding-top: 1.2rem;
     border-top: 1px solid var(--border);
-  }
-
-  .post-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 600;
   }
 
   @media (max-width: 1024px) {

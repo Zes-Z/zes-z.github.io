@@ -278,7 +278,7 @@ async function newPost() {
 
 
 
----
+
 
 `;
 
@@ -338,6 +338,8 @@ async function newPost() {
   console.log('  pinedOrder: 0');
   console.log(`  draft: ${response.draft}`);
 }
+
+
 
 /* =========================================================
  * newport

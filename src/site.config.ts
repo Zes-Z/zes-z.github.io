@@ -87,6 +87,13 @@ export const siteConfig = {
       // 提取码:3z3q
       label: { eng: 'Cloud Drive', cn: '云盘', jap: 'クラウドドライブ' },
     },
+    {
+      icon: 'wechat',
+      // 点击后复制下面 wechatId 中配置的微信号,不会跳转
+      wechatId: 'Zes234-INTJ',
+      href: '#',
+      label: { eng: 'WeChat', cn: '微信', jap: 'WeChat' },
+    },
 
     {
       icon: 'rss',
@@ -123,10 +130,9 @@ export const siteConfig = {
   /** Ratio cycle used by the archive masonry cards (3 列时对应实际显示 4/6·9/6·6/6,可密铺)。 */
   masonryRatios: ['3 / 2', '2 / 3', '1 / 1'] as const,
 
-  /**
-   * 相册"所有"板块的图片:true = 默认淡黑白、悬停变彩色;
-   * 仅作用于"所有"(wall)板块,作品集板块始终全彩。
-   */
+
+//  * 相册"所有"板块的图片:true = 默认淡黑白、悬停变彩色;
+//  * 仅作用于"所有"(wall)板块,作品集板块始终全彩。
   photosGrayscaleHover: true,
 } as const;
 

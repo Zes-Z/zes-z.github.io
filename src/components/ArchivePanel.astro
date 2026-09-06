@@ -1,6 +1,7 @@
 ---
 import { t } from '../i18n';
 import type { Language } from '../types';
+import { archiveHref, archiveCategoryHref } from '../utils/paths';
 
 export interface ArchivePostData {
   id: string;
@@ -39,16 +40,16 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
   <div class="archive-main">
     <!-- 分类:最上方,横向胶囊单选,居中 -->
     <div class="archive-categories" role="group" aria-label={t(lang, 'archive.categories')}>
-      <button class="category-pill is-active" type="button" data-category="" aria-pressed="true">
+      <a class="category-pill" data-category="" href={archiveHref(lang)}>
         <span>{t(lang, 'archive.all')}</span>
         <span class="filter-count">{posts.length}</span>
-      </button>
+      </a>
       {
         categories.map(([name, count]) => (
-          <button class="category-pill" type="button" data-category={name} aria-pressed="false">
+          <a class="category-pill" data-category={name} href={archiveCategoryHref(lang, name)}>
             <span>{name}</span>
             <span class="filter-count">{count}</span>
-          </button>
+          </a>
         ))
       }
     </div>
@@ -65,7 +66,7 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
                     <time class="timeline-date">{post.month}/{post.day}</time>
                     <a class="timeline-title" href={post.href}>{post.title}</a>
                     <span class="timeline-meta">
-                      <span class="chip">{post.category}</span>
+                      <a class="chip chip-link" href={archiveCategoryHref(lang, post.category)}>{post.category}</a>
                       {post.tags.map((tagName) => <span class="chip chip--plain">{tagName}</span>)}
                     </span>
                   </li>
@@ -114,7 +115,17 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
 
   const state = { category: '' };
 
-  const categoryButtons = [...panel.querySelectorAll<HTMLButtonElement>('[data-category]')];
+  const categoryButtons = [...panel.querySelectorAll<HTMLAnchorElement>('[data-category]')];
+
+  // “All posts”链接是归档页无分类地址,以此为基础生成各分类可分享地址
+  const baseArchiveUrl = categoryButtons[0]?.href ?? '';
+  function categoryHref(category: string): string {
+    if (!baseArchiveUrl) return '#';
+    const url = new URL(baseArchiveUrl);
+    if (category) url.searchParams.set('category', category);
+    else url.searchParams.delete('category');
+    return url.toString();
+  }
 
   function filtered(): ArchiveItem[] {
     return state.category ? allPosts.filter((post) => post.category === state.category) : allPosts;
@@ -189,14 +200,14 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
     }
   }
 
-  categoryButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      state.category = button.dataset.category ?? '';
-      syncFilters();
-      syncView();
-    });
-  });
-
+  // 通过 URL 的 ?category=... 进入时,直接展示对应分类视图
+  state.category = new URLSearchParams(window.location.search).get('category') ?? '';
+  if (state.category) {
+    const activeCategory = categoryButtons.find((button) => button.dataset.category === state.category);
+    const categoryLabel = activeCategory?.textContent?.trim() || state.category;
+    document.title = `${categoryLabel} · ${document.title}`;
+  }
+  syncFilters();
   syncView();
   }
 </script>
@@ -229,6 +240,7 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
     background: var(--surface);
     color: var(--text-soft);
     font-size: 0.86rem;
+    text-decoration: none;
     cursor: pointer;
     transition:
       background var(--transition-fast),
@@ -256,6 +268,14 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
   .category-pill.is-active .filter-count {
     background: transparent;
     color: var(--sky);
+  }
+
+  .chip-link {
+    text-decoration: none;
+  }
+  .chip-link:hover {
+    background: color-mix(in srgb, var(--sky) 24%, transparent);
+    color: var(--hover);
   }
 
   /* ---------- right: timeline(竖线) / masonry ---------- */
