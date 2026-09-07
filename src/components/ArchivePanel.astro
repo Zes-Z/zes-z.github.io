@@ -117,16 +117,6 @@ const years = [...timeline.keys()].sort((a, b) => b - a);
 
   const categoryButtons = [...panel.querySelectorAll<HTMLAnchorElement>('[data-category]')];
 
-  // “All posts”链接是归档页无分类地址,以此为基础生成各分类可分享地址
-  const baseArchiveUrl = categoryButtons[0]?.href ?? '';
-  function categoryHref(category: string): string {
-    if (!baseArchiveUrl) return '#';
-    const url = new URL(baseArchiveUrl);
-    if (category) url.searchParams.set('category', category);
-    else url.searchParams.delete('category');
-    return url.toString();
-  }
-
   function filtered(): ArchiveItem[] {
     return state.category ? allPosts.filter((post) => post.category === state.category) : allPosts;
   }
