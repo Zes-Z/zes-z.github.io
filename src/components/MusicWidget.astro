@@ -1,9 +1,12 @@
 ---
+import { withBase } from '../utils/paths';
+
 /**
  * 网易云音乐外链小挂件。
  * 默认收起为圆形音符按钮,点击展开/收起播放器。
  */
 const iframeSrc = 'https://music.163.com/outchain/player?type=0&id=18360816925&auto=1&height=90';
+const iconSrc = withBase('/icons/neteasecloudmusic.svg');
 ---
 
 <div class="music-widget" data-music-widget>
@@ -12,21 +15,14 @@ const iframeSrc = 'https://music.163.com/outchain/player?type=0&id=18360816925&a
       title="一起听"
       width="330"
       height="110"
-      src={iframeSrc}
+      data-src={iframeSrc}
       loading="lazy"
       style="border: 0"
     ></iframe>
   </div>
   <button class="music-widget__toggle" type="button" data-music-toggle aria-label="一起听" title="一起听">
     <span class="music-widget__icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="12" fill="#C20C0C" />
-        <path
-          fill="#fff"
-          d="M12 3.5v11.2c-.68-.34-1.43-.5-2.2-.5-2.2 0-4 1.63-4 3.65S7.6 21.5 9.8 21.5s4-1.63 4-3.65V8.2h4.5V3.5H12Z"
-        />
-        <circle cx="9.8" cy="17.65" r="1.6" fill="#fff" opacity="0" />
-      </svg>
+      <img src={iconSrc} alt="" width="24" height="24" />
     </span>
   </button>
 </div>
@@ -37,13 +33,24 @@ const iframeSrc = 'https://music.163.com/outchain/player?type=0&id=18360816925&a
   const box = document.querySelector<HTMLElement>('[data-music-box]');
 
   if (widget && toggle && box) {
+    const iframe = box.querySelector<HTMLIFrameElement>('iframe[data-src]');
+    let started = false;
+
     const sync = (open: boolean) => {
       box.hidden = !open;
       widget.classList.toggle('is-open', open);
-      widget.classList.toggle('is-playing', open);
       toggle.setAttribute('aria-expanded', String(open));
     };
-    toggle.addEventListener('click', () => sync(Boolean(box.hidden)));
+
+    toggle.addEventListener('click', () => {
+      // 首次点击:才注入网易云 iframe,浏览器允许用户手势后自动播放
+      if (!started && iframe && iframe.dataset.src) {
+        iframe.src = iframe.dataset.src;
+        started = true;
+        widget.classList.add('is-playing');
+      }
+      sync(Boolean(box.hidden));
+    });
   }
 </script>
 
@@ -78,8 +85,8 @@ const iframeSrc = 'https://music.163.com/outchain/player?type=0&id=18360816925&a
   .music-widget__toggle {
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: color-mix(in srgb, var(--surface) 85%, transparent);
@@ -94,13 +101,19 @@ const iframeSrc = 'https://music.163.com/outchain/player?type=0&id=18360816925&a
       transform 0.2s ease;
   }
   .music-widget__toggle:hover {
-    border-color: #C20C0C;
-    transform: scale(1.05);
+    border-color: #0fc8e09c;
+    transform: scale(1.1);
   }
 
   .music-widget__icon {
     display: grid;
     place-items: center;
+  }
+  .music-widget__icon img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
   }
   .music-widget.is-playing .music-widget__icon {
     animation: music-widget-spin 12s linear infinite;
