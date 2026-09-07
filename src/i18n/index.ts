@@ -63,10 +63,10 @@ const zh: Record<UiKey, string> = {
   'search.invalidRegex': '正则表达式无效',
 
   'home.pinned': '置顶文章',
-  'home.allPosts': '全部文章 →',
+  'home.allPosts': '归档 →',
 
   'archive.categories': '分类',
-  'archive.all': '全部文章',
+  'archive.all': '归档',
   'archive.noMatch': '没有符合当前筛选的文章。',
 
   'photos.wall': '所有',

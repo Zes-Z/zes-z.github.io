@@ -58,6 +58,7 @@ export const siteConfig = {
     { label: { eng: 'Recipe', cn: '菜单', jap: '料理' }, href: (lang: Language) => `/${lang}/recipes`, external: false, icon: 'recipe' },
     { label: { eng: 'Photos', cn: '相册', jap: '写真' }, href: (lang: Language) => `/${lang}/photos`, external: false, icon: 'photos' },
     { label: { eng: 'Friends', cn: '友链', jap: '友達' }, href: (lang: Language) => `/${lang}/links`, external: false, icon: 'friends' },
+      { label: { eng: 'Unknown', cn: '未知', jap: '未知' }, href: (lang: Language) => `/${lang}/unknown`, external: false, icon: 'unknown' },
   ] as const,
 
   /**
@@ -89,7 +90,7 @@ export const siteConfig = {
     },
     {
       icon: 'wechat',
-      // 点击后复制下面 wechatId 中配置的微信号,不会跳转
+      // 点击图标后自动复制 wechatId 中配置的微信号,不会跳转
       wechatId: 'Zes234-INTJ',
       href: '#',
       label: { eng: 'WeChat', cn: '微信', jap: 'WeChat' },
@@ -144,6 +145,9 @@ export const siteConfig = {
 export function siteSubtitle(): LocalizedText | undefined {
   return (siteConfig as { subtitle?: LocalizedText }).subtitle;
 }
+
+
+
 
 
 
